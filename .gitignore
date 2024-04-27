@@ -5,3 +5,8 @@ dist
 .idea
 .vscode
 *.log
+src/*.js
+src/**/*.js
+src/*.d.ts
+src/**/*.d.ts
+!src/public
