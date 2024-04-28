@@ -1,0 +1,44 @@
+<header class="h-16 w-full md:flex md:justify-center">
+    <nav
+            class="fixed w-full text-white sm:border-b-2 sm:border-b-slate-700 sm:px-4 sm:shadow-sm sm:shadow-slate-100/5"
+    >
+        <div
+                class="relative flex h-16 flex-col items-center bg-slate-900 sm:flex-row sm:justify-between md:mx-auto md:max-w-4xl lg:max-w-6xl"
+        >
+            <div
+                    class="relative z-10 flex h-full w-full items-center justify-between border-b-2 border-b-slate-700 px-6 py-4 shadow-md shadow-slate-100/5 sm:w-fit sm:border-none sm:shadow-none"
+            >
+                <h3 class="font-sans text-xl font-black tracking-wide">
+                    <a href="/publicme"
+                    ><span>Public</span
+                        ><span class="text-emerald-400">me</span>
+                    </a>
+                </h3>
+                <div id="open-nav" class="transition-all sm:hidden">
+                    <i
+                            class="fa-solid fa-bars fa-lg cursor-pointer"
+                    ></i>
+                </div>
+                <div id="close-nav" class="hidden transition-all">
+                    <i class="fa-solid fa-xmark fa-xl"></i>
+                </div>
+            </div>
+            <div
+                    id="nav-links"
+                    class="absolute top-16 z-50 w-full -translate-x-full flex-col gap-2 overflow-hidden rounded-b-md bg-slate-950/80 transition duration-200 sm:relative sm:top-0 sm:flex sm:w-fit sm:transform-none sm:flex-row sm:items-center sm:justify-between sm:bg-transparent"
+            >
+                <a
+                        class="box-content flex h-10 w-full items-center justify-center pt-4 text-sm tracking-tight text-slate-200 transition-all hover:bg-slate-500/30 sm:w-fit sm:rounded-md sm:px-2 sm:pt-0"
+                        href="https://inthava.me" target="_blank"
+                >Inthava.me</a
+                >
+
+                <a
+                        class="box-content flex h-10 w-full items-center justify-center pb-4 text-sm tracking-tight text-slate-200 transition-all hover:bg-slate-500/30 sm:w-fit sm:rounded-md sm:px-2 sm:pb-0"
+                        href="https://ຮຽນພາສາຈິນ.me" target="_blank"
+                >ຮຽນພາສາຈິນ.me</a
+                >
+            </div>
+        </div>
+    </nav>
+</header>
