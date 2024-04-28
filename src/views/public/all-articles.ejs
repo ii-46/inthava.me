@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#0f172a">
+    <meta name="description"
+          content="I'm Inthava, a software engineer. I write about web development, JavaScript, and software engineering." />
+    <link rel="canonical" href="https://inthava.me/article/all">
+    <title><%= message; %></title>
+    <link rel="stylesheet" href="/statics/css/all-posts.css" />
+    <style>
+        svg {
+            display: inline-block;
+            fill: #f1f5f9;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100">
+<%- include("nav.p.ejs") %>
+<main>
+    <section
+            class="px-4 sm:px-8 md:mx-auto md:max-w-4xl md:pb-6 md:pt-10 lg:max-w-6xl"
+    >
+        <form class="flex flex-col py-4 md:mx-auto md:max-w-2xl" method="get" action="/article/all">
+            <label for="search" class="ml-1 text-2xl font-bold"
+            >search</label
+            >
+            <div
+                    class="mt-2 flex w-full items-stretch justify-between gap-1"
+            >
+                <input
+                        class="grow rounded-l-md bg-slate-700 py-1 pl-4 hover:shadow-sm hover:shadow-white/30 focus:outline-none focus:ring-[2px] focus:ring-slate-500"
+                        type="text"
+                        name="search"
+                        id="search"
+                        placeholder="find by title or topic"
+                />
+                <button
+                        class="grow rounded-r-md bg-slate-700 hover:shadow-sm hover:shadow-white/30 focus:outline-none focus:ring-[2px] focus:ring-slate-500"
+                        aria-label="search button" title="search button"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                    </svg>
+                </button>
+            </div>
+        </form>
+        <div class="p-3 md:max-w-3xl md:pt-4 lg:max-w-6xl">
+            <p class="ml-2 text-white">
+                        <span class="border-b border-dashed border-slate-400">
+                            These are all my public articles.🧾(<strong><%= articles.length; %></strong>)
+                        </span>
+                <span class="text-slate-200"> I hope you find something useful.</span>
+            </p>
+        </div>
+    </section>
+
+    <section
+            class="mt-2 px-4 sm:px-8 md:mx-auto md:mt-0 md:max-w-4xl lg:max-w-6xl"
+    >
+        <div class="flex flex-col gap-4" itemscope itemtype="http://schema.org/ItemList">
+            <% for (article of articles) { %>
+                <article
+                        class="rounded-md border border-slate-600 p-3 transition duration-200 hover:shadow-sm hover:shadow-white/30"
+                        itemprop="itemListElement" itemscope itemtype="http://schema.org/Article"
+                >
+                    <a href="/article/<%= article.slug; %>"
+                       class="cursor-pointer font-bold leading-snug text-slate-200 hover:border-b-2 hover:border-slate-400"
+                       itemprop="url"
+                    >
+                        <span itemprop="name"><%= article.title; %></span>
+                    </a>
+                    <div class="mt-2 flex justify-between">
+                        <time itemprop="datePublished" datetime="<%= (new Date(article.createdAt)).toISOString() %>"
+                              class="text-xs tracking-wide text-neutral-400"
+                        ><%= (new Date(article.updatedAt)).toDateString(); %></time
+                        >
+                        <span
+                                class="items-center text-xs tracking-wide text-neutral-400"
+                                itemprop="keywords"
+                        ><%= article.category %>
+                            </span>
+                    </div>
+                </article>
+            <% } %>
+
+        </div>
+    </section>
+    <% if (categories.length > 0) { %>
+        <section
+                class=" mt-2 px-4 sm:px-8 md:mx-auto md:max-w-4xl lg:row-start-1 lg:row-end-2 lg:max-w-6xl"
+        >
+            <div class="rounded-md py-4">
+                <div class="">
+                        <span class="text-xl font-black tracking-tight"
+                        >Categories</span
+                        >
+                </div>
+                <div class="mt-2 flex flex-col px-1 text-slate-200">
+                    <ul class="text-sm leading-relaxed">
+                        <% for (category of categories) { %>
+                            <li class="mt-1">
+                                <a href="?category=<%= category; %>"
+                                   class="cursor-pointer hover:border-b-2 hover:border-slate-400"
+                                >📦 <%= category %></a
+                                >
+                            </li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    <% } %>
+</main>
+<%- include("footer.p.ejs") %>
+<script type="application/javascript">
+  const openNav = document.getElementById("open-nav");
+  const closeNav = document.getElementById("close-nav");
+  const navLinks = document.getElementById("nav-links");
+  openNav.addEventListener("click", function() {
+    openNav.classList.add("hidden");
+    closeNav.classList.remove("hidden");
+    navLinks.classList.remove("-translate-x-full");
+  });
+  closeNav.addEventListener("click", function() {
+    closeNav.classList.add("hidden");
+    openNav.classList.remove("hidden");
+    navLinks.classList.add("-translate-x-full");
+  });
+</script>
+</body>
+</html>

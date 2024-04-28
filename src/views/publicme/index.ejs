@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Dashboard</title>
+    <script defer src="/statics/assets/fontawesome/js/all.js"></script>
+
+    <link rel="stylesheet" href="/statics/css/main.css" />
+</head>
+<body class="bg-slate-900 text-slate-100">
+<%- include("nav.p.ejs") %>
+<main class="w-full">
+    <div class="w-full md:mx-auto md:max-w-3xl lg:max-w-6xl">
+        <div class="block">
+            <%- include("menu.p.ejs") %>
+            <div class="mt-8 w-full px-4">
+                <div
+                        class="w-full space-y-4 sm:grid sm:grid-cols-[1fr_1fr] sm:gap-4 sm:space-y-0 sm:pb-8 md:grid-cols-[1fr_1fr_1fr] lg:grid-cols-[1fr_1fr_1fr_1fr]"
+                >
+
+                    <%
+                    for (article of articles) {
+                    %>
+                        <div
+                                class="h-fit rounded-md border border-slate-600 transition duration-200 hover:shadow-sm hover:shadow-white/30 md:mt-0"
+                        >
+                            <div>
+                                <img src="<%= article.thumbnail.includes("http") ? article.thumbnail : `/upload/images/${article.thumbnail}`; %>"
+                                     alt="<%= article.title; %>" class="rounded-md" />
+                            </div>
+                            <div class="p-3">
+                                <a
+                                        class="cursor-pointer font-bold leading-snug text-slate-200 hover:border-b-2 hover:border-slate-400"
+                                >
+                                    <%= article.title; %>
+                                </a>
+                                <div
+                                        class="mt-2 flex flex-col gap-2 text-xs"
+                                >
+                                    <div class="flex items-center gap-2">
+                                        <i
+                                                class="fa-regular fa-calendar text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= (new Date(article.createdAt)).toDateString(); %>
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i
+                                                class="fa-solid fa-earth text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= article.status; %>
+                                        </p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i
+                                                class="fa-regular fa-folder text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= article.category; %>
+                                        </p>
+                                    </div>
+
+                                    <div
+                                            class="flex w-full justify-between gap-2 text-xs"
+                                    >
+                                        <a
+                                                href="/publicme/article/<%= article.slug; %>/edit"
+                                                class="flex w-fit items-center gap-2 rounded-md bg-sky-600 px-4 py-1 font-bold text-sky-100"
+                                        >
+                                            <i
+                                                    class="fa-solid fa-pencil"
+                                            ></i>
+                                            <span>edit</span>
+                                        </a>
+                                        <a
+                                                href="/publicme/article/<%= article.slug %>/delete"
+                                                class="flex w-fit items-center gap-2 rounded-md bg-red-500 px-4 py-1 font-bold text-red-100"
+                                        >
+                                            <i
+                                                    class="fa-solid fa-archive"
+                                            ></i>
+                                            <span>delete</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+                <div
+                        class="flex flex-col gap-4 py-6 sm:grid sm:grid-cols-[1fr_1fr] md:grid-cols-[1fr_1fr_1fr] lg:grid-cols-[1fr_1fr_1fr_1fr]"
+                >
+                    <% for (workshop of workshops) { %>
+                        <article
+                                class="rounded-md border border-slate-600 transition duration-200 hover:shadow-sm hover:shadow-white/30"
+                        >
+                            <div class="">
+                                <img
+                                        src="<%= workshop.thumbnail.includes("http") ? workshop.thumbnail : `/upload/images/${workshop.thumbnail}`; %>"
+                                        class="object-fill rounded-md"
+                                        alt="meetup event"
+                                />
+                            </div>
+                            <div class="p-3">
+                                <a
+                                        class="cursor-pointer font-bold leading-snug text-slate-200 hover:border-b-2 hover:border-slate-400"
+                                >
+                                    <%= workshop.title; %>
+                                </a>
+                                <p class="mt-2 text-sm text-slate-300">
+                                    <%= workshop.description; %>
+                                </p>
+                                <div
+                                        class="mt-2 flex flex-col gap-2 text-xs"
+                                >
+                                    <div class="flex gap-2">
+                                        <i
+                                                class="fa-regular fa-calendar text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= (new Date(workshop.createdAt)).toDateString(); %>
+                                        </p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <i
+                                                class="fa-solid fa-timeline text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= workshop.time %>
+                                        </p>
+                                    </div>
+                                    <div class="flex gap-2">
+                                        <i
+                                                class="fa-solid fa-location-dot text-slate-300"
+                                        ></i>
+
+                                        <p
+                                                class="tracking-wide text-slate-300"
+                                        >
+                                            <%= workshop.location %>
+                                        </p>
+                                    </div>
+
+                                    <div class="flex w-full gap-2 text-xs">
+                                        <div
+                                                class="flex w-fit items-center gap-2 rounded-md bg-slate-400 px-4 py-1 font-bold text-slate-950"
+                                        >
+                                            <i
+                                                    class="fa-solid fa-chalkboard-user"
+                                            ></i>
+                                            <span>
+                                                <%= workshop.eventType %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="flex w-full justify-between gap-2 text-xs"
+                                    >
+                                        <a
+                                                href="/publicme/workshop/<%= workshop.slug; %>/edit"
+                                                class="flex w-fit items-center gap-2 rounded-md bg-sky-600 px-4 py-1 font-bold text-sky-100"
+                                        >
+                                            <i
+                                                    class="fa-solid fa-pencil"
+                                            ></i>
+                                            <span>edit</span>
+                                        </a>
+                                        <a
+                                                href="/publicme/workshop/<%= workshop.slug %>/delete"
+                                                class="flex w-fit items-center gap-2 rounded-md bg-red-500 px-4 py-1 font-bold text-red-100"
+                                        >
+                                            <i
+                                                    class="fa-solid fa-archive"
+                                            ></i>
+                                            <span>archive</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script type="application/javascript">
+  const openNav = document.getElementById("open-nav");
+  const closeNav = document.getElementById("close-nav");
+  const navLinks = document.getElementById("nav-links");
+  openNav.addEventListener("click", function() {
+    openNav.classList.add("hidden");
+    closeNav.classList.remove("hidden");
+    navLinks.classList.remove("-translate-x-full");
+  });
+  closeNav.addEventListener("click", function() {
+    closeNav.classList.add("hidden");
+    openNav.classList.remove("hidden");
+    navLinks.classList.add("-translate-x-full");
+  });
+</script>
+</body>
+</html>

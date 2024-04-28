@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /publicme
+
+Sitemap: https://inthava.me/sitemap.xml
