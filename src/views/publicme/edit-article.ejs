@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Edit "<%= article.title; %>"</title>
+    <script defer src="/statics/assets/fontawesome/js/all.js"></script>
+    <script
+            src="https://cdn.tiny.cloud/1/7zjz1q4sctl2p1hcrc8xmrtcguhkxfo1fg13jg6vcpl6oj5o/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"
+    ></script>
+    <link rel="stylesheet" href="/statics/css/main.css" />
+</head>
+<body class="bg-slate-900 text-slate-100">
+<%- include("nav.p.ejs") %>
+<main class="w-full">
+    <div class="w-full md:mx-auto md:max-w-3xl lg:max-w-6xl">
+        <div class="block">
+            <%- include("menu.p.ejs") %>
+            <div class="mt-8 w-full p-4">
+                <div
+                        class="rounded-md border border-slate-600 p-3 shadow shadow-neutral-200/20"
+                >
+                    <div
+                            class="border-b-2 border-dashed border-slate-400 py-4"
+                    >
+                        <h3
+                                class="text-center text-xl font-semibold tracking-tight"
+                        >
+                            Edit Article
+                        </h3>
+                    </div>
+                    <div class="mt-4">
+                        <form action="/publicme/article/<%= article.slug; %>/edit" method="post"
+                              enctype="multipart/form-data">
+                            <div
+                                    class="md:grid md:grid-cols-[1fr_1fr] md:gap-x-4"
+                            >
+                                <div class="flex flex-col gap-1">
+                                    <label for="title" class="pl-1"
+                                    >title</label
+                                    >
+                                    <input
+                                            class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                            type="text"
+                                            name="title"
+                                            id="title"
+                                            placeholder="title"
+                                            value="<%= article.title; %>"
+                                            required
+                                    />
+                                </div>
+                                <div
+                                        class="mt-2 flex flex-col gap-1 md:mt-0"
+                                >
+                                    <label for="thumb" class="pl-1"
+                                    >thumb</label
+                                    >
+                                    <div class="flex gap-2 overflow-x-auto">
+                                        <img
+                                                class="w-fit h-16 rounded-md object-cover"
+                                                src="<%= article.thumbnail.includes("http") ? article.thumbnail : `/upload/images/${article.thumbnail}` %>"
+                                                alt="thumb">
+                                        <input
+                                                class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                                type="file"
+                                                name="thumb"
+                                                id="thumb"
+                                                accept="image/png, image/gif, image/jpeg"
+                                                alt="image"
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                        class="mt-2 flex flex-col gap-1 md:mt-0"
+                                >
+                                    <label for="author" class="pl-1"
+                                    >author</label
+                                    >
+                                    <input
+                                            class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                            type="text"
+                                            name="authorName"
+                                            id="author"
+                                            placeholder="author's name"
+                                            value="<%= article.authorName %>"
+                                            required
+                                    />
+                                </div>
+                                <div
+                                        class="mt-2 flex flex-col gap-1 md:mt-0"
+                                >
+                                    <label for="description" class="pl-1"
+                                    >description</label
+                                    >
+                                    <input
+                                            class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                            type="text"
+                                            name="description"
+                                            id="description"
+                                            placeholder="short intro to the public"
+                                            value="<%= article.description %>"
+                                            required
+                                    />
+                                </div>
+                                <div
+                                        class="mt-2 flex flex-col gap-1 md:mt-0"
+                                >
+                                    <label for="tag" class="pl-1"
+                                    >tags</label
+                                    >
+                                    <input
+                                            class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                            type="text"
+                                            name="tags"
+                                            id="tag"
+                                            placeholder="tag, tag, tag... please use comma to separate tags"
+                                            value="<%= article.tags.toString() %>"
+                                            required
+                                    />
+                                </div>
+                                <div
+                                        class="mt-2 flex flex-col gap-1 md:mt-0"
+                                >
+                                    <label for="category" class="pl-1"
+                                    >category</label
+                                    >
+                                    <input
+                                            class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                            type="text"
+                                            name="category"
+                                            id="category"
+                                            placeholder="category"
+                                            value="<%= article.category %>"
+                                            required
+                                    />
+                                </div>
+
+                                <!--<div class="mt-2 flex flex-col gap-1">
+                                    <label for="countries" class="pl-1"
+                                        >Category</label
+                                    >
+                                    <select
+                                        id="countries"
+                                        class="rounded-md bg-neutral-200 px-4 py-1 text-neutral-900 transition-all duration-200 placeholder:text-neutral-500 focus:bg-neutral-100 focus:shadow-inner focus:shadow-neutral-400 focus:outline-none focus:ring-[1px] focus:ring-slate-500"
+                                    >
+                                        <option
+                                            value="general"
+                                            selected
+                                        >
+                                            general
+                                        </option>
+                                        <option value="US">
+                                            United States
+                                        </option>
+                                        <option value="CA">
+                                            Canada
+                                        </option>
+                                        <option value="FR">
+                                            France
+                                        </option>
+                                        <option value="DE">
+                                            Germany
+                                        </option>
+                                    </select>
+                                </div>
+-->
+                            </div>
+
+                            <div class="mt-2 flex flex-col gap-1">
+                                <label for="content" class="pl-1"
+                                >Content</label
+                                >
+                                <textarea
+                                        id="content"
+                                        name="content"
+                                >
+                                    <%= article.content %>
+                                </textarea>
+                            </div>
+
+                            <div class="flex justify-between py-4">
+                                <button
+                                        name="status"
+                                        value="draft"
+                                        type="submit"
+                                        class="flex w-fit items-center gap-1 rounded-md bg-neutral-500 px-4 py-1 hover:bg-neutral-400 active:bg-neutral-600"
+                                >
+                                    <i
+                                            class="fa-solid fa-boxes-stacked"
+                                    ></i
+                                    >draft
+                                </button>
+                                <button
+                                        name="status"
+                                        value="public"
+                                        type="submit"
+                                        class="ml-auto mr-0 flex w-fit items-center gap-1 rounded-md bg-emerald-500 px-4 py-1 hover:bg-emerald-400 active:bg-emerald-600"
+                                >
+                                    <i class="fa-solid fa-earth"></i
+                                    >public
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script type="application/javascript">
+  const openNav = document.getElementById("open-nav");
+  const closeNav = document.getElementById("close-nav");
+  const navLinks = document.getElementById("nav-links");
+  openNav.addEventListener("click", function() {
+    openNav.classList.add("hidden");
+    closeNav.classList.remove("hidden");
+    navLinks.classList.remove("-translate-x-full");
+  });
+  closeNav.addEventListener("click", function() {
+    closeNav.classList.add("hidden");
+    openNav.classList.remove("hidden");
+    navLinks.classList.add("-translate-x-full");
+  });
+
+  tinymce.init({
+    selector: "textarea",
+    /* add all free plugin */
+    plugins:
+      "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons",
+    imagetools_cors_hosts: ["picsum.photos"],
+    menubar: "file edit view insert format tools table help",
+    toolbar_mode: "floating",
+    toolbar_sticky: true,
+    toolbar:
+      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+    tinycomments_mode: "embedded",
+    tinycomments_author: "Author name",
+    mergetags_list: [
+      { value: "First.Name", title: "First Name" },
+      { value: "Email", title: "Email" }
+    ],
+    content_style: "body { font-family: Noto Serif Lao; }"
+  });
+</script>
+</body>
+</html>

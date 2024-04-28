@@ -1,0 +1,25 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://inthava.me/</loc>
+        <lastmod>2023-09-16T07:36:20+01:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://inthava.me/article/all</loc>
+        <lastmod>2023-09-16T07:36:20+01:00</lastmod>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://inthava.me/workshop/all</loc>
+        <lastmod>2023-09-16T07:36:20+01:00</lastmod>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>
+            https://inthava.me/article/%E0%BA%81%E0%BA%B2%E0%BA%99%E0%BA%94%E0%BA%B1%E0%BA%81%E0%BA%88%E0%BA%B1%E0%BA%9A-%E0%BB%81%E0%BA%A5%E0%BA%B0-%E0%BA%88%E0%BA%B1%E0%BA%94%E0%BA%81%E0%BA%B2%E0%BA%99%E0%BA%81%E0%BA%B1%E0%BA%9A%E0%BA%82%E0%BB%8D%E0%BB%89%E0%BA%9C%E0%BA%B4%E0%BA%94%E0%BA%9E%E0%BA%B2%E0%BA%94-%E0%BB%83%E0%BA%99%E0%BA%9E%E0%BA%B2%E0%BA%AA%E0%BA%B2-javascript
+        </loc>
+        <lastmod>2023-09-25T12:40:07+00:00</lastmod>
+        <priority>0.8</priority>
+    </url>
+</urlset>
