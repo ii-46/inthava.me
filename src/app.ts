@@ -22,21 +22,23 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 1000 * 60 * 60,
-      secure: false
-    }
-  })
+      secure: false,
+    },
+  }),
 );
 app.use(morgan("common"));
 app.use("/sitemap.xml", sendSitemap);
-app.use(express.static(path.join(__dirname, "../ppublic")));
+app.use(express.static(path.join(__dirname, "../public")));
 app.use("/statics", express.static(path.join(__dirname, "../public")));
-app.use("/upload/images", express.static(path.join(__dirname, "../upload/images")));
-app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+app.use(
+  "/upload/images",
+  express.static(path.join(__dirname, "../upload/images")),
+);
+app.use(favicon(path.join(__dirname, "../public", "favicon.ico")));
 app.use("/", (req, res, next) => {
   res.setHeader("X-Powered-By", "inthava.me");
   next();
 });
-
 
 app.use(main);
 
