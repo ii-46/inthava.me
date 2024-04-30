@@ -8,12 +8,13 @@ import {
 } from "../../service/user";
 import { ServiceError } from "../../error/serviceError";
 import { BodyValidationError } from "../../../type";
+import { hasValidationError } from "../../middleware/publicme/formValidation";
 
-type SignupFormError = {
+interface SignupFormError {
   email: string | undefined;
   password: string | undefined;
   name: string | undefined;
-};
+}
 export const renderSignUpForm: RequestHandler = (req, res) => {
   const formError: SignupFormError = {
     email: undefined,
@@ -40,54 +41,77 @@ export const renderSignUpForm: RequestHandler = (req, res) => {
   res.render(view.publicme.signup, { formError });
 };
 
-export const signup: RequestHandler = async (req, res, next) => {
-  if (res.locals.validationError) {
+export const signUp: RequestHandler = async (req, res, next) => {
+  if (hasValidationError(res)) {
     next();
   }
   const { email, password, name } = req.body;
   try {
     await getUserByEmail(email);
     return res.redirect(
-      "/publicme/signin?error=Your account already exists, please sign in.",
+      "/publicme/signin?message=Your account already exists, please sign in.",
     );
   } catch (e) {
     if (e instanceof ServiceError && e.message === errorUserNotFound) {
       await newUser({ email, password, name });
-      res.redirect("/publicme/signin");
+      res.redirect("/publicme/signin?message=Your account has been created.");
     }
   }
 };
 
-export function renderSigninForm(req: Request, res: Response) {
-  let error: string | undefined = undefined;
-  if (req.query["error"] !== undefined) {
-    error = req.query["error"].toString();
+interface SignInFormError {
+  email: string | undefined;
+  password: string | undefined;
+}
+export const renderSignInForm: RequestHandler = (req, res) => {
+  const formError: SignInFormError = {
+    email: undefined,
+    password: undefined,
+  };
+  const error: BodyValidationError = res.locals.validationError;
+  if (error) {
+    for (const errorKey in error) {
+      const e = error[errorKey];
+      switch (e.path) {
+        case "email":
+          formError.email = e.msg;
+          break;
+        case "password":
+          formError.password = e.msg;
+          break;
+      }
+    }
+  }
+  let message: string | undefined = undefined;
+  if (req.query["message"] !== undefined) {
+    message = req.query["message"].toString();
   }
   res.render(view.publicme.signin, {
-    error,
+    message,
+    formError,
   });
-}
+};
 
-export async function signin(req: Request, res: Response) {
+export const signIn: RequestHandler = async (req, res, next) => {
+  if (hasValidationError(res)) {
+    next();
+  }
   const { email, password } = req.body;
   try {
     const user = await getUserByEmailAndPassword(email, password);
-    if (!user) {
-      return res.redirect("/publicme/signin");
-    }
     req.session.user = {
       userID: user.id,
       email: user.email,
     };
-
     res.redirect("/publicme");
   } catch (e) {
-    console.log("signin error", e);
-    res.render(view.error.basic);
+    res.redirect(
+      "/publicme/signin?message=Email or password is incorrect, please try again.",
+    );
   }
-}
+};
 
-export function signOut(req: Request, res: Response) {
+export const signOut: RequestHandler = (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       console.log("session destroy error", err);
@@ -96,4 +120,4 @@ export function signOut(req: Request, res: Response) {
     res.clearCookie("sid");
     res.redirect("/publicme");
   });
-}
+};

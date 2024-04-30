@@ -24,11 +24,11 @@ import {
   pageNotFoundHandler,
 } from "../handler/errorHandler";
 import {
-  renderSigninForm,
+  renderSignInForm,
   renderSignUpForm,
-  signin,
+  signIn,
   signOut,
-  signup,
+  signUp,
 } from "../handler/publicme/user";
 
 const router = Router();
@@ -120,11 +120,11 @@ function userRoute(router: Router) {
     body("email").isEmail(),
     body("password").isString(),
     formValidation,
-    signup,
+    signUp,
     renderSignUpForm,
   );
-  router.get("/signin", alreadyAuth, renderSigninForm);
 
+  router.get("/signin", alreadyAuth, renderSignInForm);
   router.post(
     "/signin",
     alreadyAuth,
@@ -132,11 +132,10 @@ function userRoute(router: Router) {
     body("email").isEmail(),
     body("password").isString(),
     formValidation,
-    signin,
+    signIn,
   );
 
   router.get("/signout", signOut);
-
   router.post("/signout", (req, res) => {
     res.redirect("/publicme/signout");
   });
