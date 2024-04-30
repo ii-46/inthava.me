@@ -20,6 +20,6 @@ export function emptyCollection(name: string, collection: any) {
 /**
  * @throws {ServiceError}
  * */
-export function notFound(name: string, entity: string) {
-  throw new ServiceError(name, `${entity} not found`);
+export function notFound(name: string, message: string) {
+  throw new ServiceError(name, message);
 }
