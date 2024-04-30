@@ -136,10 +136,10 @@ export async function getUserByEmailAndPassword(
         return user;
       }
     }
-    notFound("GetUserByEmailAndPasswordError", "User");
+    notFound("GetUserByEmailAndPasswordError", errorUserNotFound);
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      notFound("GetUserByEmailAndPasswordError", "User");
+      notFound("GetUserByEmailAndPasswordError", errorUserNotFound);
     }
     throw new ServiceError("GetUserByEmailAndPasswordError", e.message, false);
   }
