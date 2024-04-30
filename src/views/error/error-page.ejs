@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="la">
 <head>
-    <title>Read Posts</title>
+    <title><%= subject %></title>
     <meta charset="UTF-8" />
     <meta
             name="viewport"
@@ -11,16 +11,24 @@
     <script defer src="/statics/assets/fontawesome/js/all.js"></script>
     <link rel="stylesheet" href="/statics/css/main.css" />
     <link rel="stylesheet" href="/statics/plugins/prism/prism.css" />
+    <style>
+        svg {
+            display: inline-block;
+            fill: #f1f5f9;
+        }
+    </style>
 </head>
-<body class="bg-slate-900 text-slate-100">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
 <%- include("../public/nav.p.ejs") %>
-<main class="flex min-h-screen items-center justify-center">
+<main class="flex items-center h-expand justify-center">
     <div class="text-center">
-        <
-        <p class="text-2xl font-bold">something went wrong</p>
+        <h1 class="text-4xl font-bold"><%= statusCode %></h1>
+        <br/>
+        <p class="text-xl font-bold text-wrap" style="width: 70vw"><%= message %></p>
+        <br/>
         <div class="mt-4">
-            <a href="/" class="rounded-md bg-gray-800 px-4 py-2"
-            >return to home page</a
+            <a href="<%= redirectTo %>" class="rounded-md bg-gray-800 px-4 py-2"
+            ><%= redirectMessage %></a
             >
         </div>
     </div>
