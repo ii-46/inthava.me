@@ -1,24 +1,71 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import view from "../../views/view";
-import { getUserByEmailAndPassword, newUser } from "../../service/user";
+import {
+  errorUserNotFound,
+  getUserByEmail,
+  getUserByEmailAndPassword,
+  newUser,
+} from "../../service/user";
+import { ServiceError } from "../../error/serviceError";
+import { BodyValidationError } from "../../../type";
 
-export function renderSignupForm(req: Request, res: Response) {
-  throw new Error("Not implemented");
-  res.render(view.publicme.signup);
-}
+type SignupFormError = {
+  email: string | undefined;
+  password: string | undefined;
+  name: string | undefined;
+};
+export const renderSignUpForm: RequestHandler = (req, res) => {
+  const formError: SignupFormError = {
+    email: undefined,
+    password: undefined,
+    name: undefined,
+  };
+  const error: BodyValidationError = res.locals.validationError;
+  if (error) {
+    for (const errorKey in error) {
+      const e = error[errorKey];
+      switch (e.path) {
+        case "email":
+          formError.email = e.msg;
+          break;
+        case "password":
+          formError.password = e.msg;
+          break;
+        case "name":
+          formError.name = e.msg;
+          break;
+      }
+    }
+  }
+  res.render(view.publicme.signup, { formError });
+};
 
-export async function signup(req: Request, res: Response) {
+export const signup: RequestHandler = async (req, res, next) => {
+  if (res.locals.validationError) {
+    next();
+  }
   const { email, password, name } = req.body;
   try {
-    const user = await newUser({ email, password, name });
-    res.redirect("/signin");
+    await getUserByEmail(email);
+    return res.redirect(
+      "/publicme/signin?error=Your account already exists, please sign in.",
+    );
   } catch (e) {
-    res.render(view.error.basic);
+    if (e instanceof ServiceError && e.message === errorUserNotFound) {
+      await newUser({ email, password, name });
+      res.redirect("/publicme/signin");
+    }
   }
-}
+};
 
 export function renderSigninForm(req: Request, res: Response) {
-  res.render(view.publicme.signin);
+  let error: string | undefined = undefined;
+  if (req.query["error"] !== undefined) {
+    error = req.query["error"].toString();
+  }
+  res.render(view.publicme.signin, {
+    error,
+  });
 }
 
 export async function signin(req: Request, res: Response) {
