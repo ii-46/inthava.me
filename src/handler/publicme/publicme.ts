@@ -3,20 +3,20 @@ import {
   getArticleBySlug,
   getArticles,
   newArticle,
-  updateArticleBySlug
-} from "../service/article";
+  updateArticleBySlug,
+} from "../../service/article";
 import multer from "multer";
 import { Request, Response } from "express";
-import page from "../views/view";
+import page from "../../views/view";
 import {
   deleteWorkshopBySlug,
   getWorkshopBySlug,
   getWorkshops,
   newWorkshop,
-  updateWorkshopBySlug
-} from "../service/workshop";
-import { getUserByEmailAndPassword, newUser } from "../service/user";
-import { ArticleInterface } from "../model/article";
+  updateWorkshopBySlug,
+} from "../../service/workshop";
+import { getUserByEmailAndPassword, newUser } from "../../service/user";
+import { ArticleInterface } from "../../model/article";
 
 export async function index(req: Request, res: Response) {
   const articles = await getArticles();
@@ -34,7 +34,8 @@ export async function createArticle(req: Request, res: Response) {
       console.error("file is not support for create article");
       res.render(page.error.basic);
     }
-    const { title, content, category, tags, description, status, authorName } = req.body;
+    const { title, content, category, tags, description, status, authorName } =
+      req.body;
     const userId = req.session.user.userID;
     const article = await newArticle({
       title,
@@ -45,7 +46,7 @@ export async function createArticle(req: Request, res: Response) {
       description,
       status,
       authorId: userId,
-      authorName
+      authorName,
     });
     if (!article) {
       console.error("article not created in createArticle()");
@@ -83,7 +84,7 @@ export async function updateArticle(req: Request, res: Response) {
       description: req.body.description,
       status: req.body.status,
       authorId: userId,
-      authorName: req.body.authorName
+      authorName: req.body.authorName,
     };
     const updatedArticle = await updateArticleBySlug(slug, updateArticle);
     if (!updatedArticle) {
@@ -122,7 +123,6 @@ export async function deleteArticle(req: Request, res: Response) {
   res.redirect("/publicme");
 }
 
-
 export function renderWorkshopForm(req: Request, res: Response) {
   res.render(page.publicme.newWorkshop);
 }
@@ -133,7 +133,17 @@ export async function createWorkshop(req: Request, res: Response) {
       console.error("file is not support for create workshop");
       res.render(page.error.basic);
     }
-    const { title, description, location, link, time, speaker, eventType, detail, status } = req.body;
+    const {
+      title,
+      description,
+      location,
+      link,
+      time,
+      speaker,
+      eventType,
+      detail,
+      status,
+    } = req.body;
     const userId = req.session.user.userID;
     const workshop = await newWorkshop({
       title,
@@ -146,7 +156,7 @@ export async function createWorkshop(req: Request, res: Response) {
       eventType,
       detail,
       status,
-      userId
+      userId,
     });
 
     if (!workshop) {
@@ -187,7 +197,7 @@ export async function updateWorkshop(req: Request, res: Response) {
       eventType: req.body.eventType,
       detail: req.body.detail,
       status: req.body.status,
-      userId
+      userId,
     };
     const updatedWorkshop = await updateWorkshopBySlug(slug, updateWorkshop);
     if (!updatedWorkshop) {
@@ -223,57 +233,4 @@ export async function deleteWorkshop(req: Request, res: Response) {
     return res.redirect("/publicme");
   }
   res.render(page.error.basic);
-}
-
-export function renderSignupForm(req: Request, res: Response) {
-  res.render(page.publicme.signup);
-}
-
-export async function signup(req: Request, res: Response) {
-  const { email, password, name } = req.body;
-  try {
-    const user = await newUser({ email, password, name });
-    if (!user) {
-      res.render(page.error.basic);
-    }
-    console.log("user created ", user);
-    res.redirect("/signin");
-  } catch (e) {
-    console.log("signup error", e);
-    res.render(page.error.basic);
-  }
-}
-
-export function renderSigninForm(req: Request, res: Response) {
-  res.render(page.publicme.signin);
-}
-
-export async function signin(req: Request, res: Response) {
-  const { email, password } = req.body;
-  try {
-    const user = await getUserByEmailAndPassword(email, password);
-    if (!user) {
-      return res.redirect("/publicme/signin");
-    }
-    req.session.user = {
-      userID: user.id,
-      email: user.email
-    };
-
-    res.redirect("/publicme");
-  } catch (e) {
-    console.log("signin error", e);
-    res.render(page.error.basic);
-  }
-}
-
-export function signout(req: Request, res: Response) {
-  req.session.destroy((err) => {
-    if (err) {
-      console.log("session destroy error", err);
-      return res.redirect("/publicme");
-    }
-    res.clearCookie("sid");
-    res.redirect("/publicme");
-  });
 }
