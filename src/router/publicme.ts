@@ -16,23 +16,20 @@ import {
   updateArticle,
   updateWorkshop,
 } from "../handler/publicme/publicme";
-
-import {
-  renderSignupForm,
-  signup,
-  renderSigninForm,
-  signin,
-  signOut,
-} from "../handler/publicme/user";
-
 import { formValidation } from "../middleware/publicme/formValidation";
 import { alreadyAuth, auth } from "../middleware/publicme/authentication";
 import parseBody from "../middleware/parseBody";
-import page from "../views/view";
 import {
   internalServerErrorHandler,
   pageNotFoundHandler,
-} from "../error/errorHandler";
+} from "../handler/errorHandler";
+import {
+  renderSigninForm,
+  renderSignUpForm,
+  signin,
+  signOut,
+  signup,
+} from "../handler/publicme/user";
 
 const router = Router();
 
@@ -112,34 +109,38 @@ router.post(
 router.get("/workshop/:slug/delete", auth, renderWorkshopDeleteConfirm);
 router.post("/workshop/:slug/delete", auth, ...parseBody(), deleteWorkshop);
 
-router.get("/signup", alreadyAuth, renderSignupForm);
-router.post(
-  "/signup",
-  alreadyAuth,
-  ...parseBody(),
-  body("name").isString(),
-  body("email").isEmail(),
-  body("password").isString(),
-  formValidation,
-  signup,
-);
-router.get("/signin", alreadyAuth, renderSigninForm);
+userRoute(router);
+function userRoute(router: Router) {
+  router.get("/signup", alreadyAuth, renderSignUpForm);
+  router.post(
+    "/signup",
+    alreadyAuth,
+    ...parseBody(),
+    body("name").isString(),
+    body("email").isEmail(),
+    body("password").isString(),
+    formValidation,
+    signup,
+    renderSignUpForm,
+  );
+  router.get("/signin", alreadyAuth, renderSigninForm);
 
-router.post(
-  "/signin",
-  alreadyAuth,
-  ...parseBody(),
-  body("email").isEmail(),
-  body("password").isString(),
-  formValidation,
-  signin,
-);
+  router.post(
+    "/signin",
+    alreadyAuth,
+    ...parseBody(),
+    body("email").isEmail(),
+    body("password").isString(),
+    formValidation,
+    signin,
+  );
 
-router.get("/signout", signOut);
+  router.get("/signout", signOut);
 
-router.post("/signout", (req, res) => {
-  res.redirect("/publicme/signout");
-});
+  router.post("/signout", (req, res) => {
+    res.redirect("/publicme/signout");
+  });
+}
 
 router.use(pageNotFoundHandler);
 
