@@ -27,6 +27,9 @@
                                 id="name"
                                 class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
                         />
+                        <% if(formError.name) { %>
+                            <p>Please provide your superior name</p>
+                        <% } %>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="pl-1" for="email">email</label>
@@ -39,6 +42,9 @@
                                 class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
                                 required
                         />
+                        <% if(formError.email) { %>
+                            <p>Please provide your superior email</p>
+                        <% } %>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="pl-1" for="password"
@@ -51,6 +57,9 @@
                                 class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
                                 required
                         />
+                        <% if(formError.password) { %>
+                            <p>Please provide your superior password</p>
+                        <% } %>
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="pl-1" for="confirm_password"
@@ -74,6 +83,7 @@
                         </button>
                     </div>
                 </div>
+                <%= formError %>
             </form>
         </div>
     </div>
