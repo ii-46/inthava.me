@@ -9,6 +9,10 @@ import favicon from "serve-favicon";
 // router
 import main from "./router/main";
 import { sendSitemap } from "./handler/sitemap";
+import {
+  internalServerErrorHandler,
+  pageNotFoundHandler,
+} from "./handler/errorHandler";
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -42,11 +46,6 @@ app.use("/", (req, res, next) => {
 
 app.use(main);
 
-app.use((req, res, next) => {
-  res.send("PAGE NOT FOUND");
-});
-app.use((err, req, res, next) => {
-  console.log(err);
-  res.send("error happened");
-});
+app.use(pageNotFoundHandler);
+app.use(internalServerErrorHandler);
 export default app;
