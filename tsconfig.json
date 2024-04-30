@@ -3,18 +3,20 @@
     "sourceMap": false,
     "outDir": "./dist",
     "rootDir": "./",
-    "strict": false,
+    "strict": false, // TODO: set to true
     "lib": [
       "esnext"
     ],
     "esModuleInterop": true,
     "declaration": true,
     "typeRoots": [
-      "./node_modules/@types"
+      "./node_modules/@types",
+      "./type",
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "./type"
   ],
   "exclude": [
     "node_modules"
