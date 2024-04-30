@@ -4,7 +4,7 @@ import slugify from "slugify";
 import { faker } from "@faker-js/faker";
 import { newWorkshop } from "../src/service/workshop";
 import { ArticleInterface } from "../src/model/article";
-import { UserInterface } from "../src/model/user";
+import { User } from "../src/model/user";
 import { WorkshopInterface } from "../src/model/workshop";
 
 const userID = "84527264-3cdc-44ed-9f05-91991d391756";
@@ -17,31 +17,33 @@ const article: ArticleInterface = {
   description: "Hello World",
   status: "Hello World",
   authorId: "6a6abf7d-40a5-4719-b930-a610cff12b98",
-  authorName: "Hello World"
+  authorName: "Hello World",
 };
-const user: UserInterface = {
+const user: User = {
   email: "test1",
   name: "inthava",
-  password: "test1"
+  password: "test1",
 };
 
-function createRandomUser(): UserInterface {
+function createRandomUser(): User {
   const email = faker.internet.email();
   const name = faker.person.firstName();
   const password = faker.internet.password();
   return {
     email,
     name,
-    password
+    password,
   };
 }
-
 
 function createRandomArticle(): ArticleInterface {
   const title = faker.lorem.sentence();
   const content = faker.lorem.paragraphs();
   const category = faker.lorem.word();
-  const tags = faker.lorem.words().split(" ").map((tag) => tag.trim());
+  const tags = faker.lorem
+    .words()
+    .split(" ")
+    .map((tag) => tag.trim());
   const thumbnail = faker.image.url();
   const description = faker.lorem.sentence();
   const status = "public";
@@ -56,7 +58,7 @@ function createRandomArticle(): ArticleInterface {
     description,
     status,
     authorId,
-    authorName
+    authorName,
   };
 }
 
@@ -84,25 +86,27 @@ function createRandomWorkshop(): WorkshopInterface {
     eventType,
     detail,
     status,
-    userId
+    userId,
   };
 }
 
 for (let i = 0; i < 5; i++) {
   const article = createRandomArticle();
-  newArticle(article).then((article) => {
-    console.log(article);
-  }).catch((err) => {
-    console.log(err);
-  });
-  newWorkshop(createRandomWorkshop()).then((workshop) => {
+  newArticle(article)
+    .then((article) => {
+      console.log(article);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  newWorkshop(createRandomWorkshop())
+    .then((workshop) => {
       console.log(workshop);
-    }
-  ).catch((err) => {
-    console.log(err);
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
-
 
 // newArticle(article).then((article) => {
 //     console.log(article);
