@@ -3,7 +3,9 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { comparePassword, hashPassword } from "../utils/password";
 import { UpdateUser, User } from "../model/user";
 import { emptyCollection, notFound, ServiceError } from "../error/serviceError";
-import { throws } from "node:assert";
+
+export const errorUserNotFound = "User not found";
+export const errorUsersNotFound = "Users not found";
 /**
  * @throws {ServiceError}
  */
@@ -32,7 +34,7 @@ export async function getUserByEmail(email: string) {
     });
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetUserByEmailError", "User not found");
+      throw new ServiceError("GetUserByEmailError", errorUserNotFound);
     }
     throw new ServiceError("GetUserByEmailError", e.message, false);
   }
@@ -50,7 +52,7 @@ export async function getUserById(id: string) {
     });
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetUserByIdError", "User not found");
+      throw new ServiceError("GetUserByIdError", errorUserNotFound);
     }
     throw new ServiceError("GetUserByIdError", e.message, false);
   }
@@ -66,7 +68,7 @@ export async function getAllUser() {
     return users;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetAllUserError", "Users not found");
+      throw new ServiceError("GetAllUserError", errorUsersNotFound);
     }
     throw new ServiceError("GetAllUserError", e.message, false);
   }
@@ -89,7 +91,7 @@ export async function updateUser(user: UpdateUser) {
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
       if (e.code === "P2025") {
-        throw new ServiceError("UpdateUserError", "User not found");
+        throw new ServiceError("UpdateUserError", errorUserNotFound);
       }
     }
     throw new ServiceError("UpdateUserError", e.message, false);
@@ -109,7 +111,7 @@ export async function deleteUser(id: string) {
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
       if (e.code === "P2025") {
-        throw new ServiceError("DeleteUserError", "User not found");
+        throw new ServiceError("DeleteUserError", errorUserNotFound);
       }
     }
     throw new ServiceError("DeleteUserError", e.message, false);
