@@ -1,130 +1,144 @@
 import DBClient from "../utils/DBClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { comparePassword, hashPassword } from "../utils/password";
-import { UserInterface } from "../model/user";
-
-export async function newUser(user: UserInterface) {
-  const email = user.email;
-  const name = user.name;
-  const password = hashPassword(user.password);
+import { UpdateUser, User } from "../model/user";
+import { emptyCollection, notFound, ServiceError } from "../error/serviceError";
+import { throws } from "node:assert";
+/**
+ * @throws {ServiceError}
+ */
+export async function newUser(user: User) {
+  user.password = hashPassword(user.password);
   try {
-    const user = await DBClient.user.create({
+    await DBClient.user.create({
       data: {
-        email,
-        name,
-        password
-      }
+        ...user,
+      },
     });
-    return user;
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
-    }
-    return null;
+    throw new ServiceError("CreateUserError", e.message);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getUserByEmail(email: string) {
   try {
-    const user = await DBClient.user.findUnique({
+    return await DBClient.user.findUniqueOrThrow({
       where: {
-        email
-      }
+        email,
+      },
     });
-    return user;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      throw new ServiceError("GetUserByEmailError", "User not found");
     }
-    return null;
+    throw new ServiceError("GetUserByEmailError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getUserById(id: string) {
   try {
-    const user = await DBClient.user.findUnique({
+    return await DBClient.user.findUniqueOrThrow({
       where: {
-        id
-      }
+        id,
+      },
     });
-    return user;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      throw new ServiceError("GetUserByIdError", "User not found");
     }
-    return null;
+    throw new ServiceError("GetUserByIdError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getAllUser() {
   try {
     const users = await DBClient.user.findMany();
+    emptyCollection("GetAllUserError", users);
     return users;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      throw new ServiceError("GetAllUserError", "Users not found");
     }
-    return null;
+    throw new ServiceError("GetAllUserError", e.message, false);
   }
 }
 
-export async function updateUser(id: string, user: UserInterface) {
-  const email = user.email;
-  const name = user.name;
-  const password = user.password;
+/**
+ * @throws {ServiceError}
+ */
+export async function updateUser(user: UpdateUser) {
   try {
-    const user = await DBClient.user.update({
+    await DBClient.user.update({
       where: {
-        id
+        id: user.id,
       },
       data: {
-        email,
-        name,
-        password
-      }
+        ...user.user,
+      },
     });
     return user;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      if (e.code === "P2025") {
+        throw new ServiceError("UpdateUserError", "User not found");
+      }
     }
-    return null;
+    throw new ServiceError("UpdateUserError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function deleteUser(id: string) {
   try {
-    const user = await DBClient.user.delete({
+    await DBClient.user.delete({
       where: {
-        id
-      }
+        id,
+      },
     });
-    return user;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      if (e.code === "P2025") {
+        throw new ServiceError("DeleteUserError", "User not found");
+      }
     }
-    return null;
+    throw new ServiceError("DeleteUserError", e.message, false);
   }
 }
 
-export async function getUserByEmailAndPassword(email: string, password: string) {
+/**
+ * @throws {ServiceError}
+ */
+export async function getUserByEmailAndPassword(
+  email: string,
+  password: string,
+) {
   try {
-    const user = await DBClient.user.findUnique({
+    const user = await DBClient.user.findUniqueOrThrow({
       where: {
-        email
-      }
+        email,
+      },
     });
     if (user) {
       if (comparePassword(password, user.password)) {
         return user;
       }
     }
-    return null;
+    notFound("GetUserByEmailAndPasswordError", "User");
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.log(e.code, e.message);
+      notFound("GetUserByEmailAndPasswordError", "User");
     }
-    return null;
+    throw new ServiceError("GetUserByEmailAndPasswordError", e.message, false);
   }
 }
