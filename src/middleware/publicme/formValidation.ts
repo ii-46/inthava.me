@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import { RequestHandler, Response } from "express";
 import { validationResult } from "express-validator";
 import { BodyValidationError } from "../../../type";
 
@@ -9,3 +9,7 @@ export const formValidation: RequestHandler = (req, res, next) => {
   }
   next();
 };
+
+export function hasValidationError(res: Response): boolean {
+  return !!res.locals.validationError;
+}
