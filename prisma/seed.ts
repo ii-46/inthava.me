@@ -3,12 +3,12 @@ import { newUser } from "../src/service/user";
 import slugify from "slugify";
 import { faker } from "@faker-js/faker";
 import { newWorkshop } from "../src/service/workshop";
-import { ArticleInterface } from "../src/model/article";
+import { Article } from "../src/model/article";
 import { User } from "../src/model/user";
 import { WorkshopInterface } from "../src/model/workshop";
 
 const userID = "84527264-3cdc-44ed-9f05-91991d391756";
-const article: ArticleInterface = {
+const article: Article = {
   title: "Hello World",
   content: "Hello World",
   category: "Hello World",
@@ -36,7 +36,7 @@ function createRandomUser(): User {
   };
 }
 
-function createRandomArticle(): ArticleInterface {
+function createRandomArticle(): Article {
   const title = faker.lorem.sentence();
   const content = faker.lorem.paragraphs();
   const category = faker.lorem.word();
