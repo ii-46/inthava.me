@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { ErrorRequestHandler, RequestHandler } from "express";
 import { ErrorPage, renderErrorPage } from "../views/view";
 
-export function pageNotFoundHandler(req: Request, res: Response) {
+export const pageNotFoundHandler: RequestHandler = (req, res) => {
   const pathSlice = req.path.split("/");
   const path = pathSlice[pathSlice.length - 1];
   const errorData: ErrorPage = {
@@ -11,14 +11,14 @@ export function pageNotFoundHandler(req: Request, res: Response) {
     message: `ຫາຫຍັງ? ບໍ່ມີເດີ້ໜ້າ "${path}" ນະ.`,
   };
   renderErrorPage(errorData);
-}
+};
 
-export function internalServerErrorHandler(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
+export const internalServerErrorHandler: ErrorRequestHandler = (
+  err,
+  _req,
+  res,
+  _next,
+) => {
   const errorData: ErrorPage = {
     res,
     statusCode: 500,
@@ -28,4 +28,4 @@ export function internalServerErrorHandler(
   };
   renderErrorPage(errorData);
   console.error("Internal Error: ", err);
-}
+};
