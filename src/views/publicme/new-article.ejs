@@ -51,6 +51,9 @@
                                             placeholder="title"
                                             required
                                     />
+                                    <% if(formError.title) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.title %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -67,6 +70,9 @@
                                             alt="image"
                                             required
                                     />
+                                    <% if(formError.thumb) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.thumb %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -82,6 +88,9 @@
                                             placeholder="author's name"
                                             required
                                     />
+                                    <% if(formError.authorName) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.authorName %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -97,6 +106,9 @@
                                             placeholder="short intro to the public"
                                             required
                                     />
+                                    <% if(formError.description) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.description %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -112,6 +124,9 @@
                                             placeholder="tag, tag, tag... please use comma to separate tags"
                                             required
                                     />
+                                    <% if(formError.tags) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.tags %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -127,6 +142,9 @@
                                             placeholder="category"
                                             required
                                     />
+                                    <% if(formError.category) { %>
+                                        <p class="text-red-500 text-sm"><%= formError.category %></p>
+                                    <% } %>
                                 </div>
 
                                 <!--<div class="mt-2 flex flex-col gap-1">
@@ -168,6 +186,9 @@
                                         id="content"
                                         name="content"
                                 ></textarea>
+                                <% if(formError.content) { %>
+                                    <p class="text-red-500 text-sm"><%= formError.content %></p>
+                                <% } %>
                             </div>
 
                             <div class="flex justify-between py-4">
