@@ -1,11 +1,6 @@
 import DBClient from "../utils/DBClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import {
-  Article,
-  ArticleListResult,
-  ArticleResult,
-  UpdateArticle,
-} from "../model/article";
+import { Article, UpdateArticle } from "../model/article";
 import { titleSlug } from "../utils/slug";
 import { ServiceError } from "../error/serviceError";
 
