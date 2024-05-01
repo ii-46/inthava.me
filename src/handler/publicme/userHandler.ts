@@ -22,22 +22,7 @@ export const renderSignUpForm: RequestHandler = (req, res) => {
     name: undefined,
   };
   const error: BodyValidationError = res.locals.validationError;
-  if (error) {
-    for (const errorKey in error) {
-      const e = error[errorKey];
-      switch (e.path) {
-        case "email":
-          formError.email = e.msg;
-          break;
-        case "password":
-          formError.password = e.msg;
-          break;
-        case "name":
-          formError.name = e.msg;
-          break;
-      }
-    }
-  }
+  mapSignUpFormError(error, formError);
   res.render(view.publicme.signup, { formError });
 };
 
@@ -69,19 +54,7 @@ export const renderSignInForm: RequestHandler = (req, res) => {
     password: undefined,
   };
   const error: BodyValidationError = res.locals.validationError;
-  if (error) {
-    for (const errorKey in error) {
-      const e = error[errorKey];
-      switch (e.path) {
-        case "email":
-          formError.email = e.msg;
-          break;
-        case "password":
-          formError.password = e.msg;
-          break;
-      }
-    }
-  }
+  mapSignInFormError(error, formError);
   let message: string | undefined = undefined;
   if (req.query["message"] !== undefined) {
     message = req.query["message"].toString();
@@ -121,3 +94,44 @@ export const signOut: RequestHandler = (req, res) => {
     res.redirect("/publicme");
   });
 };
+
+function mapSignUpFormError(
+  error: BodyValidationError,
+  formError: SignupFormError,
+): void {
+  if (error) {
+    for (const errorKey in error) {
+      const e = error[errorKey];
+      switch (e.path) {
+        case "email":
+          formError.email = e.msg;
+          break;
+        case "password":
+          formError.password = e.msg;
+          break;
+        case "name":
+          formError.name = e.msg;
+          break;
+      }
+    }
+  }
+}
+
+function mapSignInFormError(
+  error: BodyValidationError,
+  formError: SignInFormError,
+): void {
+  if (error) {
+    for (const errorKey in error) {
+      const e = error[errorKey];
+      switch (e.path) {
+        case "email":
+          formError.email = e.msg;
+          break;
+        case "password":
+          formError.password = e.msg;
+          break;
+      }
+    }
+  }
+}
