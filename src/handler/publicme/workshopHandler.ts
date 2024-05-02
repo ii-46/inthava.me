@@ -14,6 +14,9 @@ import {
 import { notAuthorThanThrow } from "./index";
 import { UpdateWorkshop } from "../../model/workshop";
 import { internalServerErrorHandler } from "../errorHandler";
+import { getSuccessfulMessage } from "../../utils/message";
+
+const message = getSuccessfulMessage("workshop");
 
 export const renderWorkshopForm: RequestHandler = (_req, res) => {
   const formError: FormError = {
@@ -62,7 +65,7 @@ export const createWorkshopHandler: RequestHandler = async (req, res, next) => {
       status,
       userId,
     });
-    res.redirect("/publicme?message=workshop created successfully");
+    res.redirect(`/publicme?message=${message.create}`);
   } catch (e) {
     internalServerErrorHandler(e, req, res, next);
   }
@@ -119,7 +122,7 @@ export const updateWorkshopHandler: RequestHandler = async (req, res, next) => {
       version: workshop.version,
     };
     await updateWorkshopBySlug(updateWorkshop);
-    res.redirect("/publicme?message=workshop updated successfully");
+    res.redirect(`/publicme?message=${message.update}`);
   } catch (e) {
     internalServerErrorHandler(e, req, res, next);
   }
@@ -147,9 +150,14 @@ export const deleteWorkshop: RequestHandler = async (req, res, next) => {
     if (req.body.type === "delete" && workshop) {
       await deleteWorkshopBySlug(slug);
       notAuthorThanThrow(req.session.user.userID, workshop.userId);
-      return res.redirect("/publicme?message=workshop deleted successfully");
+      return res.redirect(`/publicme?message=${message.delete}`);
     }
-    res.redirect(`/publicme?message=workshop delete failed`);
+    internalServerErrorHandler(
+      new Error("Delete workshop failed"),
+      req,
+      res,
+      next,
+    );
   } catch (e) {
     internalServerErrorHandler(e, req, res, next);
   }
