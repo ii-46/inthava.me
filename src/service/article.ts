@@ -238,3 +238,28 @@ export async function getPublicArticles(limit: number) {
     throw new ServiceError("GetPublicArticlesError", e.message, false);
   }
 }
+
+/**
+ * @throws {ServiceError}
+ */
+export function getSearchedArticles(word: string) {
+  try {
+    return DBClient.article.findMany({
+      select: selectedColumnForList,
+      where: {
+        status: "public",
+        title: {
+          contains: word,
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+  } catch (e) {
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetSearchedArticlesError", errorArticlesNotFound);
+    }
+    throw new ServiceError("GetSearchedArticlesError", e.message, false);
+  }
+}
