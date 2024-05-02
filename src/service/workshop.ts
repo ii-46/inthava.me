@@ -1,189 +1,158 @@
 import DBClient from "../utils/DBClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import slugify from "slugify";
-import { WorkshopInterface } from "../model/workshop";
+import { UpdateWorkshop, Workshop } from "../model/workshop";
+import { ServiceError } from "../error/serviceError";
+import { titleSlug } from "../utils/slug";
 
-/*
-
-model Workshop {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  slug        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  location    String
-  link        String
-  time        String
-  thumbnail   String
-  speaker     String
-  eventType   String
-  detail      String
-  status      String
-  User        User?    @relation(fields: [userId], references: [id])
-  userId      String?
-}
-*/
-
+/**
+ * @throws {ServiceError}
+ */
 export async function getWorkshops() {
   try {
-    const workshops = await DBClient.workshop.findMany({
+    return await DBClient.workshop.findMany({
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
-    return workshops;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("GetWorkshopsError", e.message);
     }
-    console.error(e);
-    return null;
+    throw new ServiceError("GetWorkshopsError", e.message, false);
   }
 }
 
-export async function newWorkshop(workshop: WorkshopInterface) {
-  const title = workshop.title;
-  const description = workshop.description;
-  const slug = slugify(title, { lower: true, remove: /[*+~.()'"!:@]/g });
-  const location = workshop.location;
-  const link = workshop.link;
-  const time = workshop.time;
-  const thumbnail = workshop.thumbnail;
-  const speaker = workshop.speaker;
-  const eventType = workshop.eventType;
-  const detail = workshop.detail;
-  const status = workshop.status;
-  const userId = workshop.userId;
+/**
+ * @throws {ServiceError}
+ */
+export async function newWorkshop(workshop: Workshop) {
   try {
-    const workshop = await DBClient.workshop.create({
+    await DBClient.workshop.create({
       data: {
-        title,
-        description,
-        slug,
-        location,
-        link,
-        time,
-        thumbnail,
-        speaker,
-        eventType,
-        detail,
-        status,
-        userId
-      }
+        ...workshop,
+        slug: titleSlug(workshop.title),
+      },
     });
-    return workshop;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("NewWorkshopError", e.message);
     }
-    console.error(e);
-    return null;
+    throw new ServiceError("NewWorkshopError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getWorkshopBySlug(slug: string) {
   try {
-    const workshop = await DBClient.workshop.findUnique({
+    return await DBClient.workshop.findUniqueOrThrow({
       where: {
-        slug
-      }
-    });
-    return workshop;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-
-export async function updateWorkshopBySlug(slug: string, workshop: WorkshopInterface) {
-  try {
-    const updatedWorkshop = await DBClient.workshop.update({
-      where: {
-        slug
+        slug,
       },
-      data: workshop
     });
-    return updatedWorkshop;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetWorkshopBySlugError", e.message);
+    }
+    throw new ServiceError("GetWorkshopBySlugError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
+export async function updateWorkshopBySlug(workshop: UpdateWorkshop) {
+  try {
+    await DBClient.workshop.update({
+      where: {
+        slug: workshop.slug,
+        version: workshop.version,
+      },
+      data: workshop,
+    });
+  } catch (e) {
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("UpdateWorkshopBySlugError", e.message);
+    }
+    throw new ServiceError("UpdateWorkshopBySlugError", e.message, false);
+  }
+}
+
+/**
+ * @throws {ServiceError}
+ */
 export async function deleteWorkshopBySlug(slug: string) {
   try {
-    const deletedWorkshop = await DBClient.workshop.delete({
+    return await DBClient.workshop.delete({
       where: {
-        slug
-      }
+        slug,
+      },
     });
-    return deletedWorkshop;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("DeleteWorkshopBySlugError", e.message);
+    }
+    throw new ServiceError("DeleteWorkshopBySlugError", e.message, false);
   }
 }
 
+const selectedAllColumns = {
+  id: true,
+  slug: true,
+  createdAt: true,
+  updatedAt: true,
+  title: true,
+  description: true,
+  location: true,
+  link: true,
+  time: true,
+  thumbnail: true,
+  speaker: true,
+  eventType: true,
+} as const;
+
+/**
+ * @throws {ServiceError}
+ */
 export async function getAllPublicWorkshops() {
   try {
-    const workshops = await DBClient.workshop.findMany({
-      select: {
-        id: true,
-        slug: true,
-        createdAt: true,
-        updatedAt: true,
-        title: true,
-        description: true,
-        location: true,
-        link: true,
-        time: true,
-        thumbnail: true,
-        speaker: true,
-        eventType: true
-      },
+    return await DBClient.workshop.findMany({
+      select: selectedAllColumns,
       where: {
-        status: "public"
+        status: "public",
       },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
-    return workshops;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetAllPublicWorkshopsError", e.message);
+    }
+    throw new ServiceError("GetAllPublicWorkshopsError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getPublicWorkshops(limit: number) {
   try {
-    const workshops = await DBClient.workshop.findMany({
-      select: {
-        id: true,
-        slug: true,
-        createdAt: true,
-        updatedAt: true,
-        title: true,
-        description: true,
-        location: true,
-        link: true,
-        time: true,
-        thumbnail: true,
-        speaker: true,
-        eventType: true
-      },
+    return await DBClient.workshop.findMany({
+      select: selectedAllColumns,
       where: {
-        status: "public"
+        status: "public",
       },
       orderBy: {
-        createdAt: "desc"
+        createdAt: "desc",
       },
-      take: limit
+      take: limit,
     });
-    return workshops;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetPublicWorkshopsError", e.message);
+    }
+    throw new ServiceError("GetPublicWorkshopsError", e.message, false);
   }
 }
