@@ -1,15 +1,17 @@
 import { RequestHandler } from "express";
-import { getArticlesByAuthorId } from "../../service/article";
+import { getArticlesWithThumbnailByAuthorId } from "../../service/article";
 import { getWorkshops } from "../../service/workshop";
 import page from "../../views/view";
 import { ServiceError } from "../../error/serviceError";
 
 export const index: RequestHandler = async (req, res) => {
   const authorId = req.session.user.userID;
-  let articles: Awaited<ReturnType<typeof getArticlesByAuthorId>> | undefined;
+  let articles:
+    | Awaited<ReturnType<typeof getArticlesWithThumbnailByAuthorId>>
+    | undefined;
   let workshops: Awaited<ReturnType<typeof getWorkshops>> | undefined;
   try {
-    articles = await getArticlesByAuthorId(authorId);
+    articles = await getArticlesWithThumbnailByAuthorId(authorId);
   } catch (e) {
     throwIfIsOperational(e);
     articles = undefined;

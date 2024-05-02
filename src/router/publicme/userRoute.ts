@@ -3,9 +3,9 @@ import { alreadyAuth } from "../../middleware/publicme/authentication";
 import {
   renderSignInForm,
   renderSignUpForm,
-  signIn,
+  signInHandler,
   signOut,
-  signUp,
+  signUpHandler,
 } from "../../handler/publicme/userHandler";
 import parseBody from "../../middleware/parseBody";
 import { body } from "express-validator";
@@ -21,7 +21,7 @@ export default function userRoute(router: Router) {
     body("email").isEmail(),
     body("password").isString(),
     formValidation,
-    signUp,
+    signUpHandler,
     renderSignUpForm,
   );
 
@@ -33,11 +33,12 @@ export default function userRoute(router: Router) {
     body("email").isEmail(),
     body("password").isString(),
     formValidation,
-    signIn,
+    signInHandler,
+    renderSignInForm,
   );
 
   router.get("/signout", signOut);
-  router.post("/signout", (req, res) => {
+  router.post("/signout", (_req, res) => {
     res.redirect("/publicme/signout");
   });
 }
