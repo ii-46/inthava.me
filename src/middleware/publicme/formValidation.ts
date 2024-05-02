@@ -1,4 +1,4 @@
-import { RequestHandler, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { validationResult } from "express-validator";
 
 export interface ValidationErrorBody {
@@ -50,4 +50,22 @@ class FormValidationError extends Error {
     super(message);
     this.name = "FormValidationError";
   }
+}
+
+export function unsupportedImageError(req: Request, res: Response) {
+  let formError: BodyValidationError = [];
+  if (!req.file) {
+    console.log("no file");
+    formError.push({
+      type: "",
+      value: null,
+      msg: "unsupported image format",
+      path: "thumbnail",
+      location: "file",
+    });
+  }
+  if (hasValidationError(res)) {
+    formError = formError.concat(res.locals.validationError);
+  }
+  res.locals.validationError = formError;
 }

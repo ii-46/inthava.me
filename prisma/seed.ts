@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 import { newWorkshop } from "../src/service/workshop";
 import { Article } from "../src/model/article";
 import { User } from "../src/model/user";
-import { WorkshopInterface } from "../src/model/workshop";
+import { Workshop } from "../src/model/workshop";
 
 const userID = "84527264-3cdc-44ed-9f05-91991d391756";
 const article: Article = {
@@ -62,7 +62,7 @@ function createRandomArticle(): Article {
   };
 }
 
-function createRandomWorkshop(): WorkshopInterface {
+function createRandomWorkshop(): Workshop {
   const title = faker.lorem.sentence();
   const description = faker.lorem.paragraphs();
   const location = faker.lorem.word();
