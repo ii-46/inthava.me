@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { auth } from "../../middleware/publicme/authentication";
 import {
-  createWorkshop,
+  createWorkshopHandler,
   deleteWorkshop,
   renderWorkshopDeleteConfirm,
   renderWorkshopForm,
   renderWorkshopUpdateForm,
-  updateWorkshop,
+  updateWorkshopHandler,
 } from "../../handler/publicme/workshopHandler";
 import { uploadImage } from "../../middleware/uploadFile";
 import { body } from "express-validator";
@@ -29,7 +29,8 @@ export default function workshopRoute(router: Router) {
     body("detail").isString(),
     body("status").isString(),
     formValidation,
-    createWorkshop,
+    createWorkshopHandler,
+    renderWorkshopForm,
   );
 
   router.get("/workshop/:slug/edit", auth, renderWorkshopUpdateForm);
@@ -46,7 +47,8 @@ export default function workshopRoute(router: Router) {
     body("detail").isString(),
     body("status").isString(),
     formValidation,
-    updateWorkshop,
+    updateWorkshopHandler,
+    renderWorkshopUpdateForm,
   );
 
   router.get("/workshop/:slug/delete", auth, renderWorkshopDeleteConfirm);

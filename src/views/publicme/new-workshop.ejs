@@ -50,6 +50,9 @@
                                             id="title"
                                             placeholder="title"
                                     />
+                                    <% if(formError.title) { %>
+                                        <p><%= formError.title %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -65,6 +68,7 @@
                                             alt="image"
                                             accept="image/png, image/jpeg, image/jpg"
                                     />
+
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -79,6 +83,9 @@
                                             id="speaker"
                                             placeholder="speaker's name"
                                     />
+                                    <% if(formError.speaker) { %>
+                                        <p><%= formError.speaker %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -95,6 +102,9 @@
                                             id="description"
                                             placeholder="short intro for event  "
                                     />
+                                    <% if(formError.description) { %>
+                                        <p><%= formError.description %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -109,6 +119,9 @@
                                             id="location"
                                             placeholder="location"
                                     />
+                                    <% if(formError.location) { %>
+                                        <p><%= formError.location %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -123,6 +136,10 @@
                                             id="time"
                                             placeholder="event start time"
                                     />
+                                    <% if(formError.time) { %>
+                                        <p><%= formError.time %></p>
+                                    <% } %>
+
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -139,6 +156,9 @@
                                             id="workshop link"
                                             placeholder="workshop link"
                                     />
+                                    <% if(formError.link) { %>
+                                        <p><%= formError.link %></p>
+                                    <% } %>
                                 </div>
 
                                 <div class="mt-2 flex flex-col gap-1">
@@ -160,6 +180,9 @@
                                             online
                                         </option>
                                     </select>
+                                    <% if(formError.eventType) { %>
+                                        <p><%= formError.eventType %></p>
+                                    <% } %>
                                 </div>
                             </div>
 
@@ -175,6 +198,9 @@
                                 >
                                 <textarea id="content" name="detail">
                                         </textarea>
+                                <% if(formError.detail) { %>
+                                    <p><%= formError.detail %></p>
+                                <% } %>
                             </div>
 
                             <div class="flex justify-between py-4">

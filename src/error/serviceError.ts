@@ -25,3 +25,14 @@ export function emptyCollection(name: string, collection: any) {
 export function notFound(name: string, message: string) {
   throw new ServiceError(name, message);
 }
+
+/**
+ * @throws {ServiceError}
+ */
+export function throwIfIsOperational(e: Error) {
+  if (e instanceof ServiceError) {
+    if (!e.isOperational) {
+      throw e;
+    }
+  }
+}
