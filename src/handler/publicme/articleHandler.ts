@@ -13,7 +13,9 @@ import {
   FormError,
   hasValidationError,
   mapFormError,
+  unsupportedImageError,
 } from "../../middleware/publicme/formValidation";
+import { notAuthorThanThrow } from "./index";
 
 export const renderArticleForm: RequestHandler = (_req, res) => {
   const formError: FormError = {
@@ -34,23 +36,9 @@ export const renderArticleForm: RequestHandler = (_req, res) => {
 export const createArticleHandler: RequestHandler = async (req, res, next) => {
   try {
     if (hasValidationError(res) || !req.file) {
-      let formError: BodyValidationError = [];
-      if (!req.file) {
-        formError.push({
-          type: "",
-          value: null,
-          msg: "unsupported image format",
-          path: "thumbnail",
-          location: "file",
-        });
-      }
-      if (hasValidationError(res)) {
-        formError = formError.concat(res.locals.validationError);
-      }
-      res.locals.validationError = formError;
+      unsupportedImageError(req, res);
       return next();
     }
-
     const { title, content, category, tags, description, status, authorName } =
       req.body;
     const userId = req.session.user.userID;
@@ -68,7 +56,7 @@ export const createArticleHandler: RequestHandler = async (req, res, next) => {
     await newArticle({
       ...article,
     });
-    res.redirect("/publicme");
+    res.redirect("/publicme?message=create article success");
   } catch (e) {
     throw e;
   }
@@ -138,17 +126,8 @@ export const deleteArticleHandler: RequestHandler = async (req, res) => {
       await deleteArticleBySlug(slug);
       return res.redirect("/publicme?message=delete success");
     }
-    res.redirect("/publicme");
+    res.redirect("/publicme?message=delete failed");
   } catch (e) {
     throw e;
   }
 };
-
-/**
- * @throws {Error}
- */
-function notAuthorThanThrow(id: string, authorId: string) {
-  if (!(id === authorId)) {
-    throw new Error("not author");
-  }
-}

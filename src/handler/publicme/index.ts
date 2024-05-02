@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { getArticlesWithThumbnailByAuthorId } from "../../service/article";
 import { getWorkshops } from "../../service/workshop";
 import page from "../../views/view";
-import { ServiceError } from "../../error/serviceError";
+import { throwIfIsOperational } from "../../error/serviceError";
 
 export const index: RequestHandler = async (req, res) => {
   const authorId = req.session.user.userID;
@@ -26,12 +26,10 @@ export const index: RequestHandler = async (req, res) => {
 };
 
 /**
- * @throws {ServiceError}
+ * @throws {Error}
  */
-function throwIfIsOperational(e: Error) {
-  if (e instanceof ServiceError) {
-    if (!e.isOperational) {
-      throw e;
-    }
+export function notAuthorThanThrow(id: string, authorId: string) {
+  if (!(id === authorId)) {
+    throw new Error("not author");
   }
 }
