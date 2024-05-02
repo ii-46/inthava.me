@@ -18,6 +18,11 @@
     <div class="w-full md:mx-auto md:max-w-3xl lg:max-w-6xl">
         <div class="block">
             <%- include("menu.p.ejs") %>
+            <% if (message) { %>
+                <script>
+                  alert("<%= message %>");
+                </script>
+            <% } %>
             <div class="mt-8 w-full px-4">
                 <div
                         class="w-full space-y-4 sm:grid sm:grid-cols-[1fr_1fr] sm:gap-4 sm:space-y-0 sm:pb-8 md:grid-cols-[1fr_1fr_1fr] lg:grid-cols-[1fr_1fr_1fr_1fr]"

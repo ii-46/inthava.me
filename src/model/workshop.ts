@@ -1,4 +1,4 @@
-export interface WorkshopInterface {
+export interface Workshop {
   title: string;
   description: string;
   location: string;
@@ -10,4 +10,9 @@ export interface WorkshopInterface {
   detail: string;
   status: string;
   userId: string;
+}
+
+export interface UpdateWorkshop extends Workshop {
+  slug: string;
+  version: number;
 }

@@ -1,23 +1,44 @@
-import multer from "multer";
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 import page from "../../views/view";
 import {
   deleteWorkshopBySlug,
   getWorkshopBySlug,
-  getWorkshops,
   newWorkshop,
   updateWorkshopBySlug,
 } from "../../service/workshop";
+import {
+  FormError,
+  hasValidationError,
+  mapFormError,
+} from "../../middleware/publicme/formValidation";
+import { notAuthorThanThrow } from "./index";
+import { UpdateWorkshop } from "../../model/workshop";
+import { internalServerErrorHandler } from "../errorHandler";
+import { getSuccessfulMessage } from "../../utils/message";
 
-export function renderWorkshopForm(req: Request, res: Response) {
-  res.render(page.publicme.newWorkshop);
-}
+const message = getSuccessfulMessage("workshop");
 
-export async function createWorkshop(req: Request, res: Response) {
+export const renderWorkshopForm: RequestHandler = (_req, res) => {
+  const formError: FormError = {
+    title: undefined,
+    description: undefined,
+    location: undefined,
+    link: undefined,
+    time: undefined,
+    speaker: undefined,
+    eventType: undefined,
+    detail: undefined,
+    status: undefined,
+  };
+  const error = res.locals.validationError;
+  mapFormError(error, formError);
+  res.render(page.publicme.newWorkshop, { formError });
+};
+
+export const createWorkshopHandler: RequestHandler = async (req, res, next) => {
   try {
-    if (!req.file) {
-      console.error("file is not support for create workshop");
-      res.render(page.error.basic);
+    if (hasValidationError(res) || !req.file) {
+      return next();
     }
     const {
       title,
@@ -31,7 +52,7 @@ export async function createWorkshop(req: Request, res: Response) {
       status,
     } = req.body;
     const userId = req.session.user.userID;
-    const workshop = await newWorkshop({
+    await newWorkshop({
       title,
       description,
       location,
@@ -44,35 +65,49 @@ export async function createWorkshop(req: Request, res: Response) {
       status,
       userId,
     });
-
-    if (!workshop) {
-      console.error("workshop not created in createWorkshop()");
-      res.render(page.error.basic);
-    }
-    res.redirect("/publicme");
+    res.redirect(`/publicme?message=${message.create}`);
   } catch (e) {
-    if (req.file && e instanceof multer.MulterError) {
-      console.log("image upload error ");
-      res.render(page.error.basic);
-    }
-    console.error("create workshop error", e);
-    res.render(page.error.basic);
+    internalServerErrorHandler(e, req, res, next);
   }
-}
+};
 
-export async function renderWorkshopUpdateForm(req: Request, res: Response) {
-  const slug = req.params.slug;
-  const workshop = await getWorkshopBySlug(slug);
-  console.log("workshop ", workshop);
-  res.render(page.publicme.editWorkshop, { workshop });
-}
-
-export async function updateWorkshop(req: Request, res: Response) {
-  const userId = req.session.user.userID;
+export const renderWorkshopUpdateForm: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
   try {
+    const formError: FormError = {
+      title: undefined,
+      description: undefined,
+      location: undefined,
+      link: undefined,
+      time: undefined,
+      speaker: undefined,
+      eventType: undefined,
+      detail: undefined,
+      status: undefined,
+    };
     const slug = req.params.slug;
     const workshop = await getWorkshopBySlug(slug);
-    const updateWorkshop = {
+    notAuthorThanThrow(workshop.userId, req.session.user.userID);
+    res.render(page.publicme.editWorkshop, { workshop, formError });
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
+  }
+};
+
+export const updateWorkshopHandler: RequestHandler = async (req, res, next) => {
+  try {
+    if (hasValidationError(res) || !req.file) {
+      return next();
+    }
+    const userId = req.session.user.userID;
+    const slug = req.params.slug;
+    const workshop = await getWorkshopBySlug(slug);
+    notAuthorThanThrow(workshop.userId, userId);
+    const updateWorkshop: UpdateWorkshop = {
+      slug: slug,
       title: req.body.title,
       description: req.body.description,
       location: req.body.location,
@@ -84,39 +119,46 @@ export async function updateWorkshop(req: Request, res: Response) {
       detail: req.body.detail,
       status: req.body.status,
       userId,
+      version: workshop.version,
     };
-    const updatedWorkshop = await updateWorkshopBySlug(slug, updateWorkshop);
-    if (!updatedWorkshop) {
-      console.error("workshop not updated in updateWorkshop()");
-      res.render(page.error.basic);
-    }
-    res.redirect("/publicme");
+    await updateWorkshopBySlug(updateWorkshop);
+    res.redirect(`/publicme?message=${message.update}`);
   } catch (e) {
-    if (req.file && e instanceof multer.MulterError) {
-      console.log("image upload error ");
-      res.render(page.error.basic);
-    }
-    console.error("update workshop error", e);
-    res.render(page.error.basic);
+    internalServerErrorHandler(e, req, res, next);
   }
-}
+};
 
-export async function renderWorkshopDeleteConfirm(req: Request, res: Response) {
-  const slug = req.params.slug;
-  const workshop = await getWorkshopBySlug(slug);
-  res.render(page.publicme.confirmDeleteArticle, { item: workshop });
-}
-
-export async function deleteWorkshop(req: Request, res: Response) {
-  const slug = req.params.slug;
-  const workshop = await getWorkshopBySlug(slug);
-  if (req.body.type === "delete" && workshop) {
-    const deletedWorkshop = await deleteWorkshopBySlug(slug);
-    if (!deletedWorkshop) {
-      console.log("workshop not deleted 1");
-      res.render(page.error.basic);
-    }
-    return res.redirect("/publicme");
+export const renderWorkshopDeleteConfirm: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const slug = req.params.slug;
+    const workshop = await getWorkshopBySlug(slug);
+    notAuthorThanThrow(workshop.userId, req.session.user.userID);
+    res.render(page.publicme.confirmDeleteArticle, { item: workshop });
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
   }
-  res.render(page.error.basic);
-}
+};
+
+export const deleteWorkshop: RequestHandler = async (req, res, next) => {
+  try {
+    const slug = req.params.slug;
+    const workshop = await getWorkshopBySlug(slug);
+    if (req.body.type === "delete" && workshop) {
+      await deleteWorkshopBySlug(slug);
+      notAuthorThanThrow(req.session.user.userID, workshop.userId);
+      return res.redirect(`/publicme?message=${message.delete}`);
+    }
+    internalServerErrorHandler(
+      new Error("Delete workshop failed"),
+      req,
+      res,
+      next,
+    );
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
+  }
+};
