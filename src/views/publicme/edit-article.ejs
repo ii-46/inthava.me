@@ -53,6 +53,9 @@
                                             value="<%= article.title; %>"
                                             required
                                     />
+                                    <% if(formError.title) { %>
+                                    <p><%= formError.title %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -73,6 +76,9 @@
                                                 accept="image/png, image/gif, image/jpeg"
                                                 alt="image"
                                         />
+                                        <% if(formError.thumb) { %>
+                                           <p><%= formError.thumb %></p>
+                                        <% } %>
                                     </div>
                                 </div>
                                 <div
@@ -90,6 +96,9 @@
                                             value="<%= article.authorName %>"
                                             required
                                     />
+                                    <% if(formError.authorName) { %>
+                                        <p><%= formError.authorName %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -106,6 +115,9 @@
                                             value="<%= article.description %>"
                                             required
                                     />
+                                    <% if(formError.description) { %>
+                                        <p><%= formError.description %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -122,6 +134,9 @@
                                             value="<%= article.tags.toString() %>"
                                             required
                                     />
+                                    <% if(formError.tags) { %>
+                                        <p><%= formError.tags %></p>
+                                    <% } %>
                                 </div>
                                 <div
                                         class="mt-2 flex flex-col gap-1 md:mt-0"
@@ -138,6 +153,9 @@
                                             value="<%= article.category %>"
                                             required
                                     />
+                                    <% if(formError.category) { %>
+                                        <p><%= formError.category %></p>
+                                    <% } %>
                                 </div>
 
                                 <!--<div class="mt-2 flex flex-col gap-1">
@@ -181,6 +199,9 @@
                                 >
                                     <%= article.content %>
                                 </textarea>
+                                <% if(formError.content) { %>
+                                    <p><%= formError.content %></p>
+                                <% } %>
                             </div>
 
                             <div class="flex justify-between py-4">
