@@ -8,57 +8,15 @@ import {
 } from "../../service/article";
 
 import { UpdateArticle } from "../../model/article";
-import { BodyValidationError } from "../../../type";
-import { hasValidationError } from "../../middleware/publicme/formValidation";
+import {
+  BodyValidationError,
+  FormError,
+  hasValidationError,
+  mapFormError,
+} from "../../middleware/publicme/formValidation";
 
-function mapArticleFormError(
-  error: BodyValidationError,
-  formError: ArticleFormError,
-) {
-  if (error) {
-    for (const err in error) {
-      const e = error[err];
-      switch (e.path) {
-        case "title":
-          formError.title = e.msg;
-          break;
-        case "content":
-          formError.content = e.msg;
-          break;
-        case "category":
-          formError.category = e.msg;
-          break;
-        case "tags":
-          formError.tags = e.msg;
-          break;
-        case "description":
-          formError.description = e.msg;
-          break;
-        case "status":
-          formError.status = e.msg;
-          break;
-        case "authorName":
-          formError.authorName = e.msg;
-          break;
-        case "thumbnail":
-          formError.thumb = e.msg;
-          break;
-      }
-    }
-  }
-}
-interface ArticleFormError {
-  title: string | undefined;
-  content: string | undefined;
-  category: string | undefined;
-  tags: string | undefined;
-  description: string | undefined;
-  status: string | undefined;
-  authorName: string | undefined;
-  thumb: string | undefined;
-}
 export const renderArticleForm: RequestHandler = (_req, res) => {
-  const formError: ArticleFormError = {
+  const formError: FormError = {
     authorName: undefined,
     category: undefined,
     content: undefined,
@@ -69,7 +27,7 @@ export const renderArticleForm: RequestHandler = (_req, res) => {
     thumb: undefined,
   };
   const error = res.locals.validationError;
-  mapArticleFormError(error, formError);
+  mapFormError(error, formError);
   res.render(page.publicme.newArticle, { formError });
 };
 
@@ -117,7 +75,7 @@ export const createArticleHandler: RequestHandler = async (req, res, next) => {
 };
 
 export const renderArticleEditForm: RequestHandler = async (req, res) => {
-  const formError: ArticleFormError = {
+  const formError: FormError = {
     authorName: undefined,
     category: undefined,
     content: undefined,
@@ -128,7 +86,7 @@ export const renderArticleEditForm: RequestHandler = async (req, res) => {
     title: undefined,
   };
   const error = res.locals.validationError;
-  mapArticleFormError(error, formError);
+  mapFormError(error, formError);
   const slug = req.params.slug;
   const article = await getArticleBySlug(slug);
   res.render(page.publicme.editArticle, { article, formError });

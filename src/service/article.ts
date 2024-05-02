@@ -4,10 +4,20 @@ import { Article, UpdateArticle } from "../model/article";
 import { titleSlug } from "../utils/slug";
 import { ServiceError } from "../error/serviceError";
 
-const selectedColumn = {
+const selectedColumnForList = {
   id: true,
   slug: true,
   title: true,
+  createdAt: true,
+  updatedAt: true,
+  category: true,
+} as const;
+
+const selectedColumnForListWithImage = {
+  id: true,
+  slug: true,
+  title: true,
+  thumbnail: true,
   createdAt: true,
   updatedAt: true,
   category: true,
@@ -58,7 +68,7 @@ export async function getArticleBySlug(slug: string) {
 export async function getArticles() {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForList,
       orderBy: {
         updatedAt: "desc",
       },
@@ -74,10 +84,10 @@ export async function getArticles() {
 /**
  * @throws {ServiceError}
  */
-export async function getArticlesByAuthorId(authorId: string) {
+export async function getArticlesWithThumbnailByAuthorId(authorId: string) {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForListWithImage,
       where: {
         authorId,
       },
@@ -102,7 +112,7 @@ export async function getArticlesByAuthorId(authorId: string) {
 export async function getArticlesByAuthorName(authorName: string) {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForList,
       where: {
         authorName,
       },
@@ -124,7 +134,7 @@ export async function getArticlesByAuthorName(authorName: string) {
 export async function getArticlesByCategory(category: string) {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForList,
       where: {
         category,
       },
@@ -187,7 +197,7 @@ export async function deleteArticleBySlug(slug: string) {
 export async function getAllPublicArticles() {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForList,
       where: {
         status: "public",
       },
@@ -212,7 +222,7 @@ export async function getAllPublicArticles() {
 export async function getPublicArticles(limit: number) {
   try {
     return await DBClient.article.findMany({
-      select: selectedColumn,
+      select: selectedColumnForList,
       where: {
         status: "public",
       },
