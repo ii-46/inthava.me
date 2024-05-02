@@ -5,6 +5,10 @@ import page from "../../views/view";
 import { throwIfIsOperational } from "../../error/serviceError";
 
 export const index: RequestHandler = async (req, res) => {
+  let message: string | undefined = undefined;
+  if (req.query["message"] !== undefined) {
+    message = req.query["message"].toString();
+  }
   const authorId = req.session.user.userID;
   let articles:
     | Awaited<ReturnType<typeof getArticlesWithThumbnailByAuthorId>>
@@ -22,7 +26,7 @@ export const index: RequestHandler = async (req, res) => {
     throwIfIsOperational(e);
     workshops = undefined;
   }
-  res.render(page.publicme.index, { articles, workshops });
+  res.render(page.publicme.index, { articles, workshops, message });
 };
 
 /**
