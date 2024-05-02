@@ -1,256 +1,240 @@
 import DBClient from "../utils/DBClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import slugify from "slugify";
-import { ArticleInterface } from "../model/article";
+import { Article, UpdateArticle } from "../model/article";
+import { titleSlug } from "../utils/slug";
+import { ServiceError } from "../error/serviceError";
 
-export async function newArticle(article: ArticleInterface) {
-  const title = article.title;
-  const content = article.content;
-  const slug = slugify(title, { lower: true, remove: /[*+~.()'"!:@]/g });
-  const category = article.category;
-  const tags = article.tags;
-  const thumbnail = article.thumbnail;
-  const description = article.description;
-  const status = article.status;
-  const authorId = article.authorId;
-  const authorName = article.authorName;
+const selectedColumnForList = {
+  id: true,
+  slug: true,
+  title: true,
+  createdAt: true,
+  updatedAt: true,
+  category: true,
+} as const;
+
+const selectedColumnForListWithImage = {
+  id: true,
+  slug: true,
+  title: true,
+  thumbnail: true,
+  createdAt: true,
+  updatedAt: true,
+  category: true,
+} as const;
+export const errorArticleNotFound = "Article not found";
+export const errorArticlesNotFound = "Articles not found";
+
+/**
+ * @throws {ServiceError}
+ */
+export async function newArticle(article: Article) {
   try {
-    return await DBClient.article.create({
+    await DBClient.article.create({
       data: {
-        title,
-        content,
-        slug,
-        category,
-        tags,
-        thumbnail,
-        description,
-        status,
-        authorId,
-        authorName
-      }
+        ...article,
+        slug: titleSlug(article.title),
+      },
     });
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("CreateArticleError", e.message);
     }
-    return null;
+    throw new ServiceError("CreateArticleError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getArticleBySlug(slug: string) {
   try {
-    const article = await DBClient.article.findUnique({
+    return await DBClient.article.findUniqueOrThrow({
       where: {
-        slug
-      }
+        slug,
+      },
     });
-    return article;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("GetArticleBySlugError", errorArticleNotFound);
     }
-    return null;
+    throw new ServiceError("GetArticleBySlugError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getArticles() {
   try {
-    const articles = await DBClient.article.findMany({
+    return await DBClient.article.findMany({
+      select: selectedColumnForList,
       orderBy: {
-        updatedAt: "desc"
-      }
+        updatedAt: "desc",
+      },
     });
-    return articles;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("GetArticlesError", errorArticlesNotFound);
     }
-    return null;
+    throw new ServiceError("GetArticlesError", e.message, false);
   }
 }
 
-export async function getArticlesByAuthorId(authorId: string) {
+/**
+ * @throws {ServiceError}
+ */
+export async function getArticlesWithThumbnailByAuthorId(authorId: string) {
   try {
-    const articles = await DBClient.article.findMany({
+    return await DBClient.article.findMany({
+      select: selectedColumnForListWithImage,
       where: {
-        authorId
-      }
+        authorId,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
-    return articles;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError(
+        "GetArticlesByAuthorIdError",
+        errorArticlesNotFound,
+      );
     }
-    return null;
+    throw new ServiceError("GetArticlesByAuthorIdError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getArticlesByAuthorName(authorName: string) {
   try {
-    const articles = await DBClient.article.findMany({
+    return await DBClient.article.findMany({
+      select: selectedColumnForList,
       where: {
-        authorName
-      }
+        authorName,
+      },
     });
-    return articles;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError(
+        "GetArticlesByAuthorNameError",
+        errorArticlesNotFound,
+      );
     }
-    return null;
+    throw new ServiceError("GetArticlesByAuthorNameError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getArticlesByCategory(category: string) {
   try {
-    const articles = await DBClient.article.findMany({
+    return await DBClient.article.findMany({
+      select: selectedColumnForList,
       where: {
-        category
-      }
+        category,
+      },
     });
-    return articles;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError(
+        "GetArticlesByCategoryError",
+        errorArticlesNotFound,
+      );
     }
-    return null;
+    throw new ServiceError("GetArticlesByCategoryError", e.message, false);
   }
 }
 
-export async function getArticlesByTag(tag: string) {
+/**
+ * @throws {ServiceError}
+ */
+export async function updateArticleBySlug(article: UpdateArticle) {
   try {
-    const articles = await DBClient.article.findMany({
+    await DBClient.article.update({
       where: {
-        tags: {
-          has: tag
-        }
-      }
-    });
-    return articles;
-  } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
-    }
-    return null;
-  }
-}
-
-export async function getArticlesByStatus(status: string) {
-  try {
-    const articles = await DBClient.article.findMany({
-      where: {
-        status
-      }
-    });
-    return articles;
-  } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
-    }
-    return null;
-  }
-}
-
-export async function updateArticleBySlug(slug: string, article: ArticleInterface) {
-  const title = article.title;
-  const content = article.content;
-  const category = article.category;
-  const tags = article.tags;
-  const thumbnail = article.thumbnail;
-  const description = article.description;
-  const status = article.status;
-  const authorId = article.authorId;
-  const authorName = article.authorName;
-  try {
-    const article = await DBClient.article.update({
-
-      where: {
-        slug
+        slug: article.slug,
+        version: article.version,
       },
       data: {
-        title,
-        content,
-        category,
-        tags,
-        thumbnail,
-        description,
-        status,
-        authorId,
-        authorName
-      }
+        ...article,
+        version: article.version + 1,
+      },
     });
-    return article;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("UpdateArticleBySlugError", e.message);
     }
-    return null;
+    throw new ServiceError("UpdateArticleBySlugError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function deleteArticleBySlug(slug: string) {
   try {
-    const article = await DBClient.article.delete({
+    await DBClient.article.delete({
       where: {
-        slug
-      }
+        slug,
+      },
     });
-    return article;
   } catch (e) {
     if (e instanceof PrismaClientKnownRequestError) {
-      console.error(e.code, e.message);
+      throw new ServiceError("DeleteArticleBySlugError", e.message);
     }
+    throw new ServiceError("DeleteArticleBySlugError", e.message, false);
   }
 }
 
-
+/**
+ * @throws {ServiceError}
+ */
 export async function getAllPublicArticles() {
   try {
-    const articles = await DBClient.article.findMany({
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        createdAt: true,
-        updatedAt: true,
-        category: true
-      },
+    return await DBClient.article.findMany({
+      select: selectedColumnForList,
       where: {
-        status: "public"
+        status: "public",
       },
       orderBy: {
-        updatedAt: "desc"
-      }
+        updatedAt: "desc",
+      },
     });
-    return articles;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError(
+        "GetAllPublicArticlesError",
+        errorArticlesNotFound,
+      );
+    }
+    throw new ServiceError("GetAllPublicArticlesError", e.message, false);
   }
 }
 
+/**
+ * @throws {ServiceError}
+ */
 export async function getPublicArticles(limit: number) {
   try {
-    const articles = await DBClient.article.findMany({
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        createdAt: true,
-        updatedAt: true,
-        category: true
-      },
+    return await DBClient.article.findMany({
+      select: selectedColumnForList,
       where: {
-        status: "public"
+        status: "public",
       },
       orderBy: {
-        updatedAt: "desc"
+        updatedAt: "desc",
       },
-      take: limit
+      take: limit,
     });
-    return articles;
   } catch (e) {
-    console.error(e);
-    return null;
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetPublicArticlesError", errorArticlesNotFound);
+    }
+    throw new ServiceError("GetPublicArticlesError", e.message, false);
   }
 }

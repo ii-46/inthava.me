@@ -18,7 +18,10 @@ export async function newUser(user: User) {
       },
     });
   } catch (e) {
-    throw new ServiceError("CreateUserError", e.message);
+    if (e instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("CreateUserError", e.message);
+    }
+    throw new ServiceError("CreateUserError", e.message, false);
   }
 }
 

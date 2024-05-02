@@ -10,3 +10,5 @@ src/**/*.js
 src/*.d.ts
 src/**/*.d.ts
 !src/public
+upload/images
+!upload/images/*.gitkeep
