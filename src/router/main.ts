@@ -8,7 +8,6 @@ import {
 } from "../handler/main";
 import publicme from "./publicme";
 import parseBody from "../middleware/parseBody";
-import page from "../views/view";
 import {
   internalServerErrorHandler,
   pageNotFoundHandler,
@@ -16,19 +15,27 @@ import {
 
 const router = Router();
 
-router.get("/", (req, res, next) => {
+router.get("/", (_req, res) => {
   res.redirect("home");
 });
 
 router.get("/home", renderHome);
 
+router.get("/article", (_req, res) => {
+  res.redirect("/article/all");
+});
+
 router.get("/article/all", ...parseBody(), renderAllArticles);
 
 router.get("/article/:slug", renderArticle, pageNotFoundHandler);
 
+router.get("/workshop", (_req, res) => {
+  res.redirect("/workshop/all");
+});
+
 router.get("/workshop/all", renderAllWorkshops);
 
-router.get("/workshop/:slug", renderWorkshop);
+router.get("/workshop/:slug", renderWorkshop, pageNotFoundHandler);
 
 router.use("/publicme", publicme);
 

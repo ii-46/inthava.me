@@ -1,58 +1,87 @@
-import { Request, RequestHandler, Response } from "express";
+import { RequestHandler } from "express";
 import page from "../views/view";
 import {
+  errorArticlesNotFound,
   getAllPublicArticles,
   getArticleBySlug,
+  getArticlesByCategory,
   getPublicArticles,
+  getSearchedArticles,
 } from "../service/article";
 import {
   getAllPublicWorkshops,
   getPublicWorkshops,
   getWorkshopBySlug,
 } from "../service/workshop";
+import { ServiceError } from "../error/serviceError";
+import { internalServerErrorHandler } from "./errorHandler";
 
-export async function renderHome(req: Request, res: Response) {
-  const articles = await getPublicArticles(10);
-  const workshops = await getPublicWorkshops(4);
-  res.render(page.public.index, {
-    articles,
-    workshops,
-  });
-}
-
-export async function renderAllArticles(req: Request, res: Response) {
-  const articles = await getAllPublicArticles();
-  if (req.query.search !== undefined && req.query.search !== "") {
-    const search = req.query.search;
-    const searchResult = articles.filter((article) =>
-      article.title.includes(String(search)),
-    );
-    return res.render(page.public.allArticles, {
-      articles: searchResult,
-      categories: [],
-      message: `Search result for ${search}`,
+export const renderHome: RequestHandler = async (req, res, next) => {
+  try {
+    const articles = await getPublicArticles(10);
+    const workshops = await getPublicWorkshops(4);
+    res.render(page.public.index, {
+      articles,
+      workshops,
     });
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
+  }
+};
+
+export const renderAllArticles: RequestHandler = async (req, res, next) => {
+  if (req.query.search !== undefined && req.query.search !== "") {
+    const search = req.query.search as string;
+    try {
+      const searchResult = await getSearchedArticles(search);
+      return res.render(page.public.allArticles, {
+        articles: searchResult,
+        categories: [],
+        message: `Searched result for ${search}`,
+      });
+    } catch (e) {
+      if ((e as ServiceError).message === errorArticlesNotFound) {
+        return res.render(page.public.allArticles, {
+          articles: [],
+          categories: [],
+          message: `No result for ${search}`,
+        });
+      }
+    }
   } else if (req.query.category !== undefined && req.query.category !== "") {
     const category = req.query.category;
-    const categoryResult = articles.filter(
-      (article) => article.category === String(category),
-    );
-    return res.render(page.public.allArticles, {
-      articles: categoryResult,
-      categories: [],
-      message: `Category result for ${category}`,
-    });
+    try {
+      const categoryResult = await getArticlesByCategory(category as string);
+      return res.render(page.public.allArticles, {
+        articles: categoryResult,
+        categories: [],
+        message: `Category result for ${category}`,
+      });
+    } catch (e) {
+      if ((e as ServiceError).message === errorArticlesNotFound) {
+        return res.render(page.public.allArticles, {
+          articles: [],
+          categories: [],
+          message: `No result for ${category}`,
+        });
+      }
+    }
   }
-  const articleCategory = articles.map((article) => article.category);
-  const categories = articleCategory.filter(
-    (category, index) => articleCategory.indexOf(category) === index,
-  );
-  res.render(page.public.allArticles, {
-    articles,
-    categories,
-    message: "All Articles",
-  });
-}
+  try {
+    const articles = await getAllPublicArticles();
+    const articleCategory = articles.map((article) => article.category);
+    const categories = articleCategory.filter(
+      (category, index) => articleCategory.indexOf(category) === index,
+    );
+    res.render(page.public.allArticles, {
+      articles,
+      categories,
+      message: "All Articles",
+    });
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
+  }
+};
 
 export const renderArticle: RequestHandler = async (req, res, next) => {
   const slug = req.params.slug;
@@ -67,17 +96,25 @@ export const renderArticle: RequestHandler = async (req, res, next) => {
   });
 };
 
-export async function renderAllWorkshops(req: Request, res: Response) {
-  const workshops = await getAllPublicWorkshops();
-  res.render(page.public.allWorkshops, {
-    workshops,
-  });
-}
+export const renderAllWorkshops: RequestHandler = async (req, res, next) => {
+  try {
+    const workshops = await getAllPublicWorkshops();
+    res.render(page.public.allWorkshops, {
+      workshops,
+    });
+  } catch (e) {
+    internalServerErrorHandler(e, req, res, next);
+  }
+};
 
-export async function renderWorkshop(req: Request, res: Response) {
+export const renderWorkshop: RequestHandler = async (req, res, next) => {
   const slug = req.params.slug;
-  const workshop = await getWorkshopBySlug(slug);
-  res.render(page.public.readWorkshop, {
-    workshop,
-  });
-}
+  try {
+    const workshop = await getWorkshopBySlug(slug);
+    res.render(page.public.readWorkshop, {
+      workshop,
+    });
+  } catch (e) {
+    next();
+  }
+};
