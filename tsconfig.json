@@ -3,7 +3,7 @@
     "sourceMap": false,
     "outDir": "./dist",
     "rootDir": "./",
-    "strict": false, // TODO: set to true
+    "strict": true,
     "lib": [
       "esnext"
     ],

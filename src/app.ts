@@ -8,7 +8,7 @@ import favicon from "serve-favicon";
 
 // router
 import main from "./router/main";
-import { sendSitemap } from "./handler/sitemap";
+import { sendSitemapHandler } from "./handler/sitemap";
 import {
   internalServerErrorHandler,
   pageNotFoundHandler,
@@ -21,7 +21,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -31,7 +31,7 @@ app.use(
   }),
 );
 app.use(morgan("common"));
-app.use("/sitemap.xml", sendSitemap);
+app.use("/sitemap.xml", sendSitemapHandler);
 app.use(express.static(path.join(__dirname, "../public")));
 app.use("/statics", express.static(path.join(__dirname, "../public")));
 app.use(
@@ -39,7 +39,7 @@ app.use(
   express.static(path.join(__dirname, "../upload/images")),
 );
 app.use(favicon(path.join(__dirname, "../public", "favicon.ico")));
-app.use("/", (req, res, next) => {
+app.use("/", (_req, res, next) => {
   res.setHeader("X-Powered-By", "inthava.me");
   next();
 });
