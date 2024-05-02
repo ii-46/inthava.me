@@ -24,7 +24,7 @@ router.get("/home", renderHome);
 
 router.get("/article/all", ...parseBody(), renderAllArticles);
 
-router.get("/article/:slug", renderArticle);
+router.get("/article/:slug", renderArticle, pageNotFoundHandler);
 
 router.get("/workshop/all", renderAllWorkshops);
 
