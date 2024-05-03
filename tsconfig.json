@@ -10,13 +10,12 @@
     "esModuleInterop": true,
     "declaration": true,
     "typeRoots": [
+      "./src/types",
       "./node_modules/@types",
-      "./type",
     ]
   },
   "include": [
     "src/**/*.ts",
-    "./type"
   ],
   "exclude": [
     "node_modules"
