@@ -37,10 +37,11 @@ export async function newArticle(article: Article) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("CreateArticleError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("CreateArticleError", err.message);
     }
-    throw new ServiceError("CreateArticleError", e.message, false);
+    throw new ServiceError("CreateArticleError", err.message, false);
   }
 }
 
@@ -55,10 +56,11 @@ export async function getArticleBySlug(slug: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetArticleBySlugError", errorArticleNotFound);
     }
-    throw new ServiceError("GetArticleBySlugError", e.message, false);
+    throw new ServiceError("GetArticleBySlugError", err.message, false);
   }
 }
 
@@ -74,10 +76,11 @@ export async function getArticles() {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetArticlesError", errorArticlesNotFound);
     }
-    throw new ServiceError("GetArticlesError", e.message, false);
+    throw new ServiceError("GetArticlesError", err.message, false);
   }
 }
 
@@ -96,13 +99,14 @@ export async function getArticlesWithThumbnailByAuthorId(authorId: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError(
         "GetArticlesByAuthorIdError",
         errorArticlesNotFound,
       );
     }
-    throw new ServiceError("GetArticlesByAuthorIdError", e.message, false);
+    throw new ServiceError("GetArticlesByAuthorIdError", err.message, false);
   }
 }
 
@@ -118,13 +122,14 @@ export async function getArticlesByAuthorName(authorName: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError(
         "GetArticlesByAuthorNameError",
         errorArticlesNotFound,
       );
     }
-    throw new ServiceError("GetArticlesByAuthorNameError", e.message, false);
+    throw new ServiceError("GetArticlesByAuthorNameError", err.message, false);
   }
 }
 
@@ -140,13 +145,14 @@ export async function getArticlesByCategory(category: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError(
         "GetArticlesByCategoryError",
         errorArticlesNotFound,
       );
     }
-    throw new ServiceError("GetArticlesByCategoryError", e.message, false);
+    throw new ServiceError("GetArticlesByCategoryError", err.message, false);
   }
 }
 
@@ -166,10 +172,11 @@ export async function updateArticleBySlug(article: UpdateArticle) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("UpdateArticleBySlugError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("UpdateArticleBySlugError", err.message);
     }
-    throw new ServiceError("UpdateArticleBySlugError", e.message, false);
+    throw new ServiceError("UpdateArticleBySlugError", err.message, false);
   }
 }
 
@@ -184,10 +191,11 @@ export async function deleteArticleBySlug(slug: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("DeleteArticleBySlugError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("DeleteArticleBySlugError", err.message);
     }
-    throw new ServiceError("DeleteArticleBySlugError", e.message, false);
+    throw new ServiceError("DeleteArticleBySlugError", err.message, false);
   }
 }
 
@@ -206,13 +214,14 @@ export async function getAllPublicArticles() {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError(
         "GetAllPublicArticlesError",
         errorArticlesNotFound,
       );
     }
-    throw new ServiceError("GetAllPublicArticlesError", e.message, false);
+    throw new ServiceError("GetAllPublicArticlesError", err.message, false);
   }
 }
 
@@ -232,10 +241,11 @@ export async function getPublicArticles(limit: number) {
       take: limit,
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetPublicArticlesError", errorArticlesNotFound);
     }
-    throw new ServiceError("GetPublicArticlesError", e.message, false);
+    throw new ServiceError("GetPublicArticlesError", err.message, false);
   }
 }
 
@@ -257,9 +267,10 @@ export function getSearchedArticles(word: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetSearchedArticlesError", errorArticlesNotFound);
     }
-    throw new ServiceError("GetSearchedArticlesError", e.message, false);
+    throw new ServiceError("GetSearchedArticlesError", err.message, false);
   }
 }

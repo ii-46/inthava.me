@@ -69,8 +69,8 @@ export const signInHandler: RequestHandler = async (req, res, next) => {
   try {
     const user = await getUserByEmailAndPassword(email, password);
     req.session.user = {
-      userID: user.id,
-      email: user.email,
+      userID: user!.id,
+      email: user!.email,
     };
     res.redirect("/publicme");
   } catch (e) {

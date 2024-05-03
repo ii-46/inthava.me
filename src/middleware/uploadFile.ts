@@ -1,7 +1,8 @@
-import multer from "multer";
+import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import slugify from "slugify";
 import { randomUUID } from "crypto";
+import { Request } from "express";
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -20,7 +21,11 @@ const storage = multer.diskStorage({
   },
 });
 
-const filterImage = (req, file, cb) => {
+const filterImage = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+) => {
   if (
     file.mimetype === "image/jpeg" ||
     file.mimetype === "image/png" ||

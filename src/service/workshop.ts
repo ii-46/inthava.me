@@ -15,10 +15,11 @@ export async function getWorkshops() {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetWorkshopsError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetWorkshopsError", err.message);
     }
-    throw new ServiceError("GetWorkshopsError", e.message, false);
+    throw new ServiceError("GetWorkshopsError", err.message, false);
   }
 }
 
@@ -34,10 +35,11 @@ export async function newWorkshop(workshop: Workshop) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("NewWorkshopError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("NewWorkshopError", err.message);
     }
-    throw new ServiceError("NewWorkshopError", e.message, false);
+    throw new ServiceError("NewWorkshopError", err.message, false);
   }
 }
 
@@ -52,10 +54,11 @@ export async function getWorkshopBySlug(slug: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetWorkshopBySlugError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetWorkshopBySlugError", err.message);
     }
-    throw new ServiceError("GetWorkshopBySlugError", e.message, false);
+    throw new ServiceError("GetWorkshopBySlugError", err.message, false);
   }
 }
 
@@ -72,10 +75,11 @@ export async function updateWorkshopBySlug(workshop: UpdateWorkshop) {
       data: workshop,
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("UpdateWorkshopBySlugError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("UpdateWorkshopBySlugError", err.message);
     }
-    throw new ServiceError("UpdateWorkshopBySlugError", e.message, false);
+    throw new ServiceError("UpdateWorkshopBySlugError", err.message, false);
   }
 }
 
@@ -90,10 +94,11 @@ export async function deleteWorkshopBySlug(slug: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("DeleteWorkshopBySlugError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("DeleteWorkshopBySlugError", err.message);
     }
-    throw new ServiceError("DeleteWorkshopBySlugError", e.message, false);
+    throw new ServiceError("DeleteWorkshopBySlugError", err.message, false);
   }
 }
 
@@ -127,10 +132,11 @@ export async function getAllPublicWorkshops() {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetAllPublicWorkshopsError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetAllPublicWorkshopsError", err.message);
     }
-    throw new ServiceError("GetAllPublicWorkshopsError", e.message, false);
+    throw new ServiceError("GetAllPublicWorkshopsError", err.message, false);
   }
 }
 
@@ -150,9 +156,10 @@ export async function getPublicWorkshops(limit: number) {
       take: limit,
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("GetPublicWorkshopsError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("GetPublicWorkshopsError", err.message);
     }
-    throw new ServiceError("GetPublicWorkshopsError", e.message, false);
+    throw new ServiceError("GetPublicWorkshopsError", err.message, false);
   }
 }
