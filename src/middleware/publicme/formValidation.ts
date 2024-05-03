@@ -41,7 +41,8 @@ export const mapFormError = (
       }
     }
   } catch (e) {
-    throw new FormValidationError(e.message);
+    const err = e as Error;
+    throw new FormValidationError(err.message);
   }
 };
 

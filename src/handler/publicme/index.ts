@@ -9,7 +9,7 @@ export const index: RequestHandler = async (req, res) => {
   if (req.query["message"] !== undefined) {
     message = req.query["message"].toString();
   }
-  const authorId = req.session.user.userID;
+  const authorId = req.session.user!.userID;
   let articles:
     | Awaited<ReturnType<typeof getArticlesWithThumbnailByAuthorId>>
     | undefined;
@@ -17,13 +17,13 @@ export const index: RequestHandler = async (req, res) => {
   try {
     articles = await getArticlesWithThumbnailByAuthorId(authorId);
   } catch (e) {
-    throwIfIsOperational(e);
+    throwIfIsOperational(e as Error);
     articles = undefined;
   }
   try {
     workshops = await getWorkshops();
   } catch (e) {
-    throwIfIsOperational(e);
+    throwIfIsOperational(e as Error);
     workshops = undefined;
   }
   res.render(page.publicme.index, { articles, workshops, message });
