@@ -2,13 +2,13 @@
   "compilerOptions": {
     "sourceMap": false,
     "outDir": "./dist",
-    "rootDir": "./",
+    "rootDir": "./src",
     "strict": true,
     "lib": [
       "esnext"
     ],
     "esModuleInterop": true,
-    "declaration": true,
+    "declaration": false,
     "typeRoots": [
       "./src/types",
       "./node_modules/@types",
