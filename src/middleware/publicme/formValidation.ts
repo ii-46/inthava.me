@@ -66,7 +66,7 @@ export function unsupportedImageError(req: Request, res: Response) {
     });
   }
   if (hasValidationError(res)) {
-    formError = formError.concat(res.locals.validationError);
+    formError = formError.concat(res.locals.validationError!);
   }
   res.locals.validationError = formError;
 }
