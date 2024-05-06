@@ -19,6 +19,10 @@ router.get("/", (_req, res) => {
   res.redirect("home");
 });
 
+router.get("/index.html", (_req, res) => {
+  res.redirect("home");
+});
+
 router.get("/home", renderHome);
 
 router.get("/article", (_req, res) => {
