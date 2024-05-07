@@ -51,7 +51,7 @@ export const createWorkshopHandler: RequestHandler = async (req, res, next) => {
       detail,
       status,
     } = req.body;
-    const userId = req.session.user.userID;
+    const userId = req.session.user!.userID;
     await newWorkshop({
       title,
       description,
@@ -90,7 +90,7 @@ export const renderWorkshopUpdateForm: RequestHandler = async (
     };
     const slug = req.params.slug;
     const workshop = await getWorkshopBySlug(slug);
-    notAuthorThanThrow(workshop.userId, req.session.user.userID);
+    notAuthorThanThrow(workshop.userId!, req.session.user!.userID);
     res.render(page.publicme.editWorkshop, { workshop, formError });
   } catch (e) {
     internalServerErrorHandler(e, req, res, next);
@@ -102,10 +102,10 @@ export const updateWorkshopHandler: RequestHandler = async (req, res, next) => {
     if (hasValidationError(res) || !req.file) {
       return next();
     }
-    const userId = req.session.user.userID;
+    const userId = req.session.user!.userID;
     const slug = req.params.slug;
     const workshop = await getWorkshopBySlug(slug);
-    notAuthorThanThrow(workshop.userId, userId);
+    notAuthorThanThrow(workshop.userId!, userId);
     const updateWorkshop: UpdateWorkshop = {
       slug: slug,
       title: req.body.title,
@@ -136,7 +136,7 @@ export const renderWorkshopDeleteConfirm: RequestHandler = async (
   try {
     const slug = req.params.slug;
     const workshop = await getWorkshopBySlug(slug);
-    notAuthorThanThrow(workshop.userId, req.session.user.userID);
+    notAuthorThanThrow(workshop.userId!, req.session.user!.userID);
     res.render(page.publicme.confirmDeleteArticle, { item: workshop });
   } catch (e) {
     internalServerErrorHandler(e, req, res, next);
@@ -149,7 +149,7 @@ export const deleteWorkshop: RequestHandler = async (req, res, next) => {
     const workshop = await getWorkshopBySlug(slug);
     if (req.body.type === "delete" && workshop) {
       await deleteWorkshopBySlug(slug);
-      notAuthorThanThrow(req.session.user.userID, workshop.userId);
+      notAuthorThanThrow(req.session.user!.userID, workshop.userId!);
       return res.redirect(`/publicme?message=${message.delete}`);
     }
     internalServerErrorHandler(

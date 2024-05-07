@@ -44,7 +44,7 @@ export const createArticleHandler: RequestHandler = async (req, res, next) => {
     }
     const { title, content, category, tags, description, status, authorName } =
       req.body;
-    const userId = req.session.user.userID;
+    const userId = req.session.user!.userID;
     const article = {
       title,
       content,
@@ -87,7 +87,7 @@ export const updateArticleHandler: RequestHandler = async (req, res, next) => {
   if (hasValidationError(res)) {
     return next();
   }
-  const userId = req.session.user.userID;
+  const userId = req.session.user!.userID;
   try {
     const slug = req.params.slug;
     const article = await getArticleBySlug(slug);
@@ -124,7 +124,7 @@ export const deleteArticleHandler: RequestHandler = async (req, res, next) => {
     const slug = req.params.slug;
     const article = await getArticleBySlug(slug);
     if (req.body.type === "delete" && article) {
-      notAuthorThanThrow(req.session.user.userID, article.authorId);
+      notAuthorThanThrow(req.session.user!.userID, article.authorId);
       await deleteArticleBySlug(slug);
       return res.redirect(`/publicme?message=${message.delete}`);
     }

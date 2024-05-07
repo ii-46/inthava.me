@@ -41,7 +41,8 @@ export const mapFormError = (
       }
     }
   } catch (e) {
-    throw new FormValidationError(e.message);
+    const err = e as Error;
+    throw new FormValidationError(err.message);
   }
 };
 
@@ -65,7 +66,7 @@ export function unsupportedImageError(req: Request, res: Response) {
     });
   }
   if (hasValidationError(res)) {
-    formError = formError.concat(res.locals.validationError);
+    formError = formError.concat(res.locals.validationError!);
   }
   res.locals.validationError = formError;
 }

@@ -1,29 +1,11 @@
 import { newArticle } from "../src/service/article";
-import { newUser } from "../src/service/user";
-import slugify from "slugify";
 import { faker } from "@faker-js/faker";
 import { newWorkshop } from "../src/service/workshop";
 import { Article } from "../src/model/article";
 import { User } from "../src/model/user";
 import { Workshop } from "../src/model/workshop";
 
-const userID = "84527264-3cdc-44ed-9f05-91991d391756";
-const article: Article = {
-  title: "Hello World",
-  content: "Hello World",
-  category: "Hello World",
-  tags: ["Hello World"],
-  thumbnail: "Hello World",
-  description: "Hello World",
-  status: "Hello World",
-  authorId: "6a6abf7d-40a5-4719-b930-a610cff12b98",
-  authorName: "Hello World",
-};
-const user: User = {
-  email: "test1",
-  name: "inthava",
-  password: "test1",
-};
+const userID = "53dcedfd-efca-4ae8-ada0-9c4d02cb7243";
 
 function createRandomUser(): User {
   const email = faker.internet.email();

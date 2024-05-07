@@ -31,7 +31,9 @@
         <div
                 class="flex flex-col gap-4 py-6 sm:grid sm:grid-cols-[1fr_1fr] md:grid-cols-[1fr_1fr_1fr] lg:grid-cols-[1fr_1fr_1fr_1fr]"
         >
-            <%= workshops.length === 0 ? "<h1>There is no workshop :)</h1>" : ""; %>
+            <% if(workshops.length === 0) { %>
+                <h1>There is no workshop yet. :)</h1>
+            <% } %>
             <% for(workshop of workshops) { %>
                 <article
                         class="cursor-default h-fit rounded-md border border-slate-600 transition duration-200 hover:shadow-sm hover:shadow-white/30"

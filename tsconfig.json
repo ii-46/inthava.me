@@ -2,21 +2,20 @@
   "compilerOptions": {
     "sourceMap": false,
     "outDir": "./dist",
-    "rootDir": "./",
-    "strict": false, // TODO: set to true
+    "rootDir": "./src",
+    "strict": true,
     "lib": [
       "esnext"
     ],
     "esModuleInterop": true,
-    "declaration": true,
+    "declaration": false,
     "typeRoots": [
+      "./src/types",
       "./node_modules/@types",
-      "./type",
     ]
   },
   "include": [
     "src/**/*.ts",
-    "./type"
   ],
   "exclude": [
     "node_modules"

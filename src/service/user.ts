@@ -18,10 +18,11 @@ export async function newUser(user: User) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      throw new ServiceError("CreateUserError", e.message);
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("CreateUserError", err.message);
     }
-    throw new ServiceError("CreateUserError", e.message, false);
+    throw new ServiceError("CreateUserError", err.message, false);
   }
 }
 
@@ -36,10 +37,11 @@ export async function getUserByEmail(email: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetUserByEmailError", errorUserNotFound);
     }
-    throw new ServiceError("GetUserByEmailError", e.message, false);
+    throw new ServiceError("GetUserByEmailError", err.message, false);
   }
 }
 
@@ -54,10 +56,11 @@ export async function getUserById(id: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetUserByIdError", errorUserNotFound);
     }
-    throw new ServiceError("GetUserByIdError", e.message, false);
+    throw new ServiceError("GetUserByIdError", err.message, false);
   }
 }
 
@@ -70,10 +73,11 @@ export async function getAllUser() {
     emptyCollection("GetAllUserError", users);
     return users;
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       throw new ServiceError("GetAllUserError", errorUsersNotFound);
     }
-    throw new ServiceError("GetAllUserError", e.message, false);
+    throw new ServiceError("GetAllUserError", err.message, false);
   }
 }
 
@@ -92,12 +96,11 @@ export async function updateUser(user: UpdateUser) {
     });
     return user;
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      if (e.code === "P2025") {
-        throw new ServiceError("UpdateUserError", errorUserNotFound);
-      }
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("UpdateUserError", errorUserNotFound);
     }
-    throw new ServiceError("UpdateUserError", e.message, false);
+    throw new ServiceError("UpdateUserError", err.message, false);
   }
 }
 
@@ -112,12 +115,11 @@ export async function deleteUser(id: string) {
       },
     });
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
-      if (e.code === "P2025") {
-        throw new ServiceError("DeleteUserError", errorUserNotFound);
-      }
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
+      throw new ServiceError("DeleteUserError", errorUserNotFound);
     }
-    throw new ServiceError("DeleteUserError", e.message, false);
+    throw new ServiceError("DeleteUserError", err.message, false);
   }
 }
 
@@ -141,9 +143,14 @@ export async function getUserByEmailAndPassword(
     }
     notFound("GetUserByEmailAndPasswordError", errorUserNotFound);
   } catch (e) {
-    if (e instanceof PrismaClientKnownRequestError) {
+    const err = e as Error;
+    if (err instanceof PrismaClientKnownRequestError) {
       notFound("GetUserByEmailAndPasswordError", errorUserNotFound);
     }
-    throw new ServiceError("GetUserByEmailAndPasswordError", e.message, false);
+    throw new ServiceError(
+      "GetUserByEmailAndPasswordError",
+      err.message,
+      false,
+    );
   }
 }
