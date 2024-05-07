@@ -1,12 +1,23 @@
 {
-    "compilerOptions": {
-        "sourceMap": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "strict": false,
-        "lib": ["esnext"],
-        "esModuleInterop": true,
-        "declaration": true
-    },
-    "include": ["src/**/*.ts"]
+  "compilerOptions": {
+    "sourceMap": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "lib": [
+      "esnext"
+    ],
+    "esModuleInterop": true,
+    "declaration": false,
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types",
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
