@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="la">
+<head>
+    <title><%= workshop.title; %></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta
+            name="description"
+            content="<%= workshop.description %>"
+    />
+    <meta
+            name="keywords"
+            content="<%= workshop.speaker %>"
+    />
+    <meta
+            property="og:title"
+            content="<%= workshop.title %>"
+    />
+    <meta
+            property="og:description"
+            content="<%= workshop.description %>"
+    />
+    <meta
+            property="og:image"
+            content="https://inthava.me/upload/images/<%= workshop.thumbnail %>"
+    />
+    <meta
+            property="og:url"
+            content="https://inthava.me/workshop/<%= workshop.slug %>"
+    />
+    <meta property="og:site_name" content="Example Workshop" />
+    <link
+            rel="canonical"
+            href="https://inthava.me/workshop/<%= workshop.slug %>"
+    />
+    <meta name="dc.title" content="<%= workshop.title %>" />
+    <meta
+            name="dc.description"
+            content="<%= workshop.description %>"
+    />
+    <meta name="dc.subject" content="<%= workshop.speaker %>" />
+    <meta
+            property="article:published_time"
+            content="<%= (new Date(workshop.createdAt)).toISOString() %>"
+    />
+    <meta
+            property="article:modified_time"
+            content="<%= (new Date(workshop.updatedAt)).toISOString() %>"
+    />
+    <meta
+            property="article:author"
+            content="https://inthava.me/statics/inthava.jpg"
+    />
+    <meta property="article:section" content="<%= workshop.eventType %>" />
+    <meta property="article:tag" content="<%= workshop.speaker %>" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <script type="/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "Event",
+            "name": "<%= workshop.title %>",
+            "description": "<%= workshop.description %>",
+            "image": "https://inthava.me/upload/images/<%= workshop.thumbnail %> ",
+            "startDate": "<%= (new Date(workshop.createdAt)).toISOString() %>",
+            "endDate": "<%= (new Date((new Date(workshop.createdAt)).setDate((new Date(workshop.createdAt)).getDate() + 1))).toISOString() %>",
+            "location": {
+                "@type": "Place",
+                "name": "<%= workshop.location %>",
+                "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "<%= workshop.location %>",
+                    "addressLocality": "<%= workshop.location %>",
+                    "postalCode": "<%= workshop.location %>",
+                    "addressCountry": "<%= workshop.location %>"
+                }
+            },
+            "performer": {
+                "@type": "Person",
+                "name": "<%= workshop.speaker %>"
+            },
+            "organizer": {
+                "@type": "Person",
+                "name": "Inthava ",
+                "url": "https://inthava.me",
+                "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://inthava.me/statics/inthava.jpg"
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="/statics/css/read.css" />
+    <link rel="stylesheet" href="/statics/plugins/prism/prism.css" />
+    <style>
+        svg {
+            display: inline-block;
+            fill: #f1f5f9;
+        }
+    </style>
+
+</head>
+<body class="bg-slate-900 text-slate-100">
+<%- include("nav.p.ejs") %>
+<main>
+    <article
+            class="px-4 sm:px-8 md:mx-auto md:max-w-3xl"
+            itemscope
+            itemtype="http://schema.org/Event"
+    >
+        <header class="py-6">
+            <h1 class="text-2xl font-semibold" itemprop="name">
+                <%= workshop.title %>
+            </h1>
+            <meta
+                    itemprop="mainEntityOfPage"
+                    content="https://inthava.me/workshop/<%= workshop.slug %>"
+            />
+            <p class="py-2 text-sm text-slate-300">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                    <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z" />
+                </svg>
+                <span class="ml-1">
+                            By
+                            <span
+                                    itemprop="author"
+                                    itemscope
+                                    itemtype="http://schema.org/Person"
+                            ><span itemprop="name"><%= workshop.speaker %></span></span
+                            ></span
+                >
+                |
+                <time itemprop="datePublished" datetime="<%= (new Date(workshop.createdAt)).toISOString() %>"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                        <path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm64 80v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm128 0v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H336zM64 400v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H208zm112 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H336c-8.8 0-16 7.2-16 16z" />
+                    </svg>
+                    <span class="ml-1"><%= (new Date(workshop.createdAt)).toDateString() %></span></time
+                >
+            </p>
+            <div class="p-4">
+                <img
+                        itemprop="image"
+                        src="<%= workshop.thumbnail.includes("http") ? workshop.thumbnail : `/upload/images/${workshop.thumbnail}`; %>"
+                        alt="<%= workshop.title %>"
+                        class="rounded-md"
+                        width="100%"
+                        height="auto"
+                />
+            </div>
+        </header>
+        <div
+                class="hyphens-auto break-normal leading-relaxed md:text-lg md:font-light"
+        >
+            <div class="main-content" itemprop="articleBody">
+                <%- workshop.detail %>
+            </div>
+        </div>
+    </article>
+</main>
+<%- include("footer.p.ejs") %>
+<script type="application/javascript">
+  const openNav = document.getElementById("open-nav");
+  const closeNav = document.getElementById("close-nav");
+  const navLinks = document.getElementById("nav-links");
+  openNav.addEventListener("click", function() {
+    openNav.classList.add("hidden");
+    closeNav.classList.remove("hidden");
+    navLinks.classList.remove("-translate-x-full");
+  });
+  closeNav.addEventListener("click", function() {
+    closeNav.classList.add("hidden");
+    openNav.classList.remove("hidden");
+    navLinks.classList.add("-translate-x-full");
+  });
+</script>
+<script src="/statics/plugins/prism/prism.js"></script>
+</body>
+</html>

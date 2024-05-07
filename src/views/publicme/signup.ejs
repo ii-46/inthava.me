@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="la">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Sign Up</title>
+    <script defer src="/statics/assets/fontawesome/js/all.js"></script>
+    <link rel="stylesheet" href="/statics/css/main.css" />
+</head>
+<body class="bg-slate-900 text-slate-100">
+<%- include("nav-auth.p.ejs") %>
+<main class="w-full">
+    <div class="w-full sm:mx-auto sm:max-w-xl sm:py-16">
+        <div>
+            <h1 class="text-center text-2xl font-bold">Sign up</h1>
+            <form method="post" action="/publicme/signup">
+                <div class="flex flex-col gap-4 bg-slate-900 p-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="pl-1" for="name">name</label>
+                        <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
+                        />
+                        <% if(formError.name) { %>
+                            <p>Please provide your superior name</p>
+                        <% } %>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="pl-1" for="email">email</label>
+                        <input
+                                type="text"
+                                name="email"
+                                id="email"
+                                pattern="[^@]+@[^@]+\.[a-zA-Z]{2,6}"
+                                oninvalid="this.setCustomValidity('Please enter a valid email')"
+                                class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
+                                required
+                        />
+                        <% if(formError.email) { %>
+                            <p>Please provide your superior email</p>
+                        <% } %>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="pl-1" for="password"
+                        >Password</label
+                        >
+                        <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
+                                required
+                        />
+                        <% if(formError.password) { %>
+                            <p>Please provide your superior password</p>
+                        <% } %>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="pl-1" for="confirm_password"
+                        >Confirm Password</label
+                        >
+                        <input
+                                type="password"
+                                name="confirm_password"
+                                id="confirm_password"
+                                class="rounded-md bg-slate-600 p-2 transition duration-200 hover:bg-slate-700 focus:shadow-inner focus:shadow-slate-800 focus:outline-none"
+                                required
+                        />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button
+                                disabled
+                                type="submit"
+                                class="rounded-md bg-emerald-500 p-2 transition duration-200 hover:bg-emerald-600 focus:shadow-inner focus:shadow-emerald-600 focus:outline-none active:bg-emerald-700 disabled:grayscale"
+                        >
+                            Sign up
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<script type="application/javascript">
+  const openNav = document.getElementById("open-nav");
+  const closeNav = document.getElementById("close-nav");
+  const navLinks = document.getElementById("nav-links");
+  openNav.addEventListener("click", function() {
+    openNav.classList.add("hidden");
+    closeNav.classList.remove("hidden");
+    navLinks.classList.remove("-translate-x-full");
+  });
+  closeNav.addEventListener("click", function() {
+    closeNav.classList.add("hidden");
+    openNav.classList.remove("hidden");
+    navLinks.classList.add("-translate-x-full");
+  });
+
+  const password = document.getElementById("password");
+  const confirm_password =
+    document.getElementById("confirm_password");
+  const submit = document.querySelector("button[type='submit']");
+  const checkPassword = () => {
+    if (password.value !== confirm_password.value) {
+      confirm_password.setCustomValidity("Passwords Don't Match");
+      submit.setAttribute("disabled", "disabled");
+    } else {
+      confirm_password.setCustomValidity("");
+      submit.removeAttribute("disabled");
+    }
+  };
+  confirm_password.addEventListener("keyup", checkPassword);
+  password.addEventListener("keyup", checkPassword);
+</script>
+</body>
+</html>
