@@ -84,7 +84,7 @@ export const renderAllArticles: RequestHandler = async (req, res, next) => {
 };
 
 export const renderArticle: RequestHandler = async (req, res, next) => {
-  const slug = req.params.slug;
+  const slug = decodeURI(req.params.slug);
   let article: Awaited<ReturnType<typeof getArticleBySlug>>;
   try {
     article = await getArticleBySlug(slug);
@@ -108,7 +108,7 @@ export const renderAllWorkshops: RequestHandler = async (req, res, next) => {
 };
 
 export const renderWorkshop: RequestHandler = async (req, res, next) => {
-  const slug = req.params.slug;
+  const slug = decodeURI(req.params.slug);
   try {
     const workshop = await getWorkshopBySlug(slug);
     res.render(page.public.readWorkshop, {
