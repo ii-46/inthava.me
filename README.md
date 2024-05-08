@@ -1,42 +1,20 @@
-# inthava.me
-___
-## Guild for Deployment on Ubuntu
-### Setup PostgreSQL
-##### Install postgresql
-```shell
-sudo apt update
-sudo apt install postgresql
-```
-#### Start postgresql
-```shell
-sudo service postgresql start
-```
-#### Connect to postgresql using ```psql```
-```shell
-sudo -u postgres psql
-```
-#### Create database for project
-postgres=# ```CREATE DATABASE "blog";```
+# [inthava.me](https://inthava.me/)
+## Overall
+inthava.me is dynamic website designed for posting blogs, articles, or summaries of my learning journey. It's developed using TypeScript and Node.js, with PostgreSQL as the database and Prisma as the ORM.
+## Features
+- **Blog and Article Posting**: Easily create and publish blog posts and articles.
+- **Content Management System**: Content management system to manage posts and articles.
+- **User Authentication**: Secure user authentication for managing posts.
+## Technologies Used
+- **TypeScript**: A statically typed superset of JavaScript for enhanced code quality and developer productivity.
+- **Node.js**: A JavaScript runtime environment for building server-side applications.
+- **PostgreSQL**: A powerful open-source relational database system for storing and managing data.
+- **Prisma**: A modern ORM (Object-Relational Mapping) for Node.js and TypeScript.
+views the rest in package.json file
 
-postgres=# ```\c blog``` // select database
-
-
-blog=# ```CREATE ROLE blog_manager WITH LOGIN PASSWORD 'pa55word';``` // create role to use in project
-
-blog=# ```exit```
-
-### Clone project to your machine
-#### 
-```shell
-
-```
-
-### Setup environment file ```.env``` 
-If your follow along you data source name should be like this:
-```text
-postgres://blog_manager:pa55word@localhost/blog
-```
-create **.env** file in root directory of the project and in **.env** should have environment variable like this.
-```text
-
-```
+## Deployment Instructions
+For deployment instructions, refer to the [deployment.md](deployment.md) file.
+## Contributing
+Contributions are welcome!
+## License
+This project is licensed under the [MIT License](LICENSE).
