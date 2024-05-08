@@ -1,4 +1,4 @@
-# inthava.me
+# [inthava.me](https://inthava.me/)
 ## Overall
 inthava.me is dynamic website designed for posting blogs, articles, or summaries of my learning journey. It's developed using TypeScript and Node.js, with PostgreSQL as the database and Prisma as the ORM.
 ## Features
