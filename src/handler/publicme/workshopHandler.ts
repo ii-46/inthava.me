@@ -88,7 +88,7 @@ export const renderWorkshopUpdateForm: RequestHandler = async (
       detail: undefined,
       status: undefined,
     };
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const workshop = await getWorkshopBySlug(slug);
     notAuthorThanThrow(workshop.userId!, req.session.user!.userID);
     res.render(page.publicme.editWorkshop, { workshop, formError });
@@ -103,7 +103,7 @@ export const updateWorkshopHandler: RequestHandler = async (req, res, next) => {
       return next();
     }
     const userId = req.session.user!.userID;
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const workshop = await getWorkshopBySlug(slug);
     notAuthorThanThrow(workshop.userId!, userId);
     const updateWorkshop: UpdateWorkshop = {
@@ -134,7 +134,7 @@ export const renderWorkshopDeleteConfirm: RequestHandler = async (
   next,
 ) => {
   try {
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const workshop = await getWorkshopBySlug(slug);
     notAuthorThanThrow(workshop.userId!, req.session.user!.userID);
     res.render(page.publicme.confirmDeleteArticle, { item: workshop });
@@ -145,7 +145,7 @@ export const renderWorkshopDeleteConfirm: RequestHandler = async (
 
 export const deleteWorkshop: RequestHandler = async (req, res, next) => {
   try {
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const workshop = await getWorkshopBySlug(slug);
     if (req.body.type === "delete" && workshop) {
       await deleteWorkshopBySlug(slug);

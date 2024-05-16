@@ -7,7 +7,7 @@ import path from "path";
 import favicon from "serve-favicon";
 
 // router
-import main from "./router/main";
+import main from "./route/main";
 import { sendSitemapHandler } from "./handler/sitemap";
 import {
   internalServerErrorHandler,
