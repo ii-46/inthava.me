@@ -10,10 +10,3 @@ For deployment instructions, refer to the [deployment.md](deployment.md) file.
 Contributions are welcome!
 ## License
 This project is licensed under the [MIT License](LICENSE).
-
-## Deployment Instructions
-For deployment instructions, refer to the [deployment.md](deployment.md) file.
-## Contributing
-Contributions are welcome!
-## License
-This project is licensed under the [MIT License](LICENSE).
