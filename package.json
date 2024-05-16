@@ -1,12 +1,14 @@
 {
   "name": "inthava.me-api-v1",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Backend for inthava.me",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "prisma-seed": "ts-node prisma/seed.ts",
     "prisma-push": "prisma db push",
+    "prisma-migrate": "prisma migrate dev --name init",
+    "prisma-update": "prisma migrate resolve --applied 0_init",
     "prisma-deploy": "prisma migrate deploy",
     "prisma-studio": "prisma studio",
     "build": "tsc -p tsconfig.json",

@@ -78,7 +78,7 @@ export const renderArticleEditForm: RequestHandler = async (req, res) => {
   };
   const error = res.locals.validationError;
   mapFormError(error, formError);
-  const slug = req.params.slug;
+  const slug = decodeURI(req.params.slug);
   const article = await getArticleBySlug(slug);
   res.render(page.publicme.editArticle, { article, formError });
 };
@@ -89,7 +89,7 @@ export const updateArticleHandler: RequestHandler = async (req, res, next) => {
   }
   const userId = req.session.user!.userID;
   try {
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const article = await getArticleBySlug(slug);
     const updateArticle: UpdateArticle = {
       ...article,
@@ -113,7 +113,7 @@ export const updateArticleHandler: RequestHandler = async (req, res, next) => {
 };
 
 export const renderArticleDeleteConfirm: RequestHandler = async (req, res) => {
-  const slug = req.params.slug;
+  const slug = decodeURI(req.params.slug);
   const article = await getArticleBySlug(slug);
   res.render(page.publicme.confirmDeleteArticle, { item: article });
   res.end();
@@ -121,7 +121,7 @@ export const renderArticleDeleteConfirm: RequestHandler = async (req, res) => {
 
 export const deleteArticleHandler: RequestHandler = async (req, res, next) => {
   try {
-    const slug = req.params.slug;
+    const slug = decodeURI(req.params.slug);
     const article = await getArticleBySlug(slug);
     if (req.body.type === "delete" && article) {
       notAuthorThanThrow(req.session.user!.userID, article.authorId);
