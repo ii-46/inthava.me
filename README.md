@@ -1,3 +1,4 @@
+> This repo only contain code from my old site long ago.
 # [inthava.me - Inthava's digital garden](https://inthava.me/)
 > My Personal Blog site built with Express.js : https://inthava.me/ 
 ## Features
